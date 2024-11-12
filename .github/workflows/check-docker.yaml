@@ -27,7 +27,7 @@ jobs:
     - name: Install system deps
       run: |
         apt-get update
-        apt-get install -y pandoc-citeproc
+        apt-get install -y pandoc-citeproc qpdf
 
     - name: Install R
       run: |
