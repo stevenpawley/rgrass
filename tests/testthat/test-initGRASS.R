@@ -1,26 +1,19 @@
 library(testthat)
-library(terra)
+source("helper.R")
 
 testthat::test_that("testing initGRASS", {
-  # download nc basic dataset
-  if (!file.exists("/tmp/nc_basic_spm_grass7.zip")) {
-    download.file(
-      "https://grass.osgeo.org/sampledata/north_carolina/nc_basic_spm_grass7.zip",
-      "/tmp/nc_basic_spm_grass7.zip"
-    )
-    unzip("/tmp/nc_basic_spm_grass7.zip", exdir = "/tmp/grassdb/nc_basic_spm_grass7")
-  }
+  testdata <- download_nc_basic()
 
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
     home = tempdir(),
-    gisDbase = "/tmp/grassdb",
-    location = "nc_basic_spm_grass7",
+    gisDbase = testdata$gisDbase,
+    location = testdata$location,
     mapset = "PERMANENT",
     override = TRUE
   )
 
   expect_s3_class(loc, "gmeta")
-  expect_equal(loc$LOCATION_NAME, "nc_basic_spm_grass7")
+  expect_equal(loc$LOCATION_NAME, testdata$location)
   expect_equal(loc$projection, "99")
 })
