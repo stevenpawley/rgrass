@@ -6,15 +6,14 @@ source("helper.R")
 # setup
 testdata <- download_nc_basic()
 
-loc <- initGRASS(
-  home = tempdir(),
-  gisDbase = testdata$gisDbase,
-  location = testdata$location,
-  mapset = "PERMANENT",
-  override = TRUE
-)
-
 test_that("testing read_RAST using terra", {
+  loc <- initGRASS(
+    gisDbase = testdata$gisDbase,
+    location = testdata$location,
+    mapset = "PERMANENT",
+    override = TRUE
+  )
+
   # read a categorical raster map
   v1 <- read_RAST("landuse", cat = TRUE, return_format = "terra")
 
@@ -35,6 +34,13 @@ test_that("testing read_RAST using terra", {
 })
 
 test_that("testing read_RAST using sp", {
+  loc <- initGRASS(
+    gisDbase = testdata$gisDbase,
+    location = testdata$location,
+    mapset = "PERMANENT",
+    override = TRUE
+  )
+
   nc_basic <- read_RAST("landuse", cat = TRUE, return_format = "SGDF")
   lvls <- levels(nc_basic$landuse)
 
