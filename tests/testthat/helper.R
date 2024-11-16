@@ -1,5 +1,9 @@
 download_nc_basic <- function() {
-  tmpdir <- tempdir()
+  if (Sys.info()["sysname"] == "Linux") {
+    tmpdir <- "/tmp"
+  } else if (Sys.info()["sysname"] == "Darwin") {
+    tmpdir <- tempdir()
+  }
 
   if (!file.exists(file.path(tmpdir, "nc_basic_spm_grass7.zip"))) {
     base_url <- "https://grass.osgeo.org/sampledata"
@@ -23,4 +27,18 @@ download_nc_basic <- function() {
   )
 
   return(dataset)
+}
+
+get_gisbase <- function() {
+  if (Sys.info()["sysname"] == "Linux") {
+    gisBase <- try(system2("grass", "--config path", stdout = TRUE))
+  } else if (Sys.info()["sysname"] == "Darwin") {
+    gisBase <- "/Applications/GRASS-8.5.app/Contents/Resources"
+  }
+  
+  if (inherits(gisBase, "try-catch")) {
+    gisBase <- NULL
+  }
+  
+  return(gisBase)
 }
