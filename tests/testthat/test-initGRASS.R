@@ -1,9 +1,10 @@
 library(testthat)
 source("helper.R")
 
-testthat::test_that("testing initGRASS", {
-  testdata <- download_nc_basic()
+# setup
+testdata <- download_nc_basic()
 
+testthat::test_that("testing initGRASS", {
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
     gisDbase = testdata$gisDbase,

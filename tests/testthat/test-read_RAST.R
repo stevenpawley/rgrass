@@ -6,14 +6,14 @@ source("helper.R")
 # setup
 testdata <- download_nc_basic()
 
-test_that("testing read_RAST using terra", {
-  loc <- initGRASS(
-    gisDbase = testdata$gisDbase,
-    location = testdata$location,
-    mapset = "PERMANENT",
-    override = TRUE
-  )
+loc <- initGRASS(
+  gisDbase = testdata$gisDbase,
+  location = testdata$location,
+  mapset = "PERMANENT",
+  override = TRUE
+)
 
+test_that("testing read_RAST using terra", {
   # read a categorical raster map
   v1 <- read_RAST("landuse", cat = TRUE, return_format = "terra")
 
@@ -21,10 +21,10 @@ test_that("testing read_RAST using terra", {
   expect_false(inMemory(v1))
 
   # check the values and labels
-  lvls <- levels(v1)[[1]]
-  expect_equal(lvls$value, 0:7)
+  lvls <- levels(v1)
+  expect_equal(lvls[[1]]$value, 0:7)
   expect_equal(
-    lvls$label,
+    lvls[[1]]$label,
     c("undefined", "developed", "agriculture", "herbaceous", "shrubland",
       "forest", "water", "sediment")
   )
@@ -34,13 +34,6 @@ test_that("testing read_RAST using terra", {
 })
 
 test_that("testing read_RAST using sp", {
-  loc <- initGRASS(
-    gisDbase = testdata$gisDbase,
-    location = testdata$location,
-    mapset = "PERMANENT",
-    override = TRUE
-  )
-
   nc_basic <- read_RAST("landuse", cat = TRUE, return_format = "SGDF")
   lvls <- levels(nc_basic$landuse)
 
