@@ -11,6 +11,7 @@ testthat::test_that("testing initGRASS", {
   
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
+    gisBase = gisBase,
     gisDbase = "/tmp/grassdb",
     location = "nc_basic_spm_grass7",
     mapset = "PERMANENT",
