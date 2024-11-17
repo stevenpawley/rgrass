@@ -3,8 +3,12 @@ source("helper.R")
 
 # setup
 # testdata <- download_nc_basic()
+gisBase <- try(system2("grass", "--config path", stdout = TRUE))
+grass_available <- !inherits(gisBase, "try-catch")
 
 testthat::test_that("testing initGRASS", {
+  skip_if_not(!isTRUE(grass_available), "GRASS GIS not found on PATH")
+  
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
     gisDbase = "/tmp/grassdb",

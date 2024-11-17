@@ -5,15 +5,21 @@ source("helper.R")
 
 # setup
 # testdata <- download_nc_basic()
-
-loc <- initGRASS(
-  gisDbase = "/tmp/grassdb",
-  location = "nc_basic_spm_grass7",
-  mapset = "PERMANENT",
-  override = TRUE
-)
+gisBase <- try(system2("grass", "--config path", stdout = TRUE))
+grass_available <- !inherits(gisBase, "try-catch")
 
 test_that("testing read_RAST using terra", {
+  skip_if_not(!isTRUE(grass_available), "GRASS GIS not found on PATH")
+
+  # initialize grass
+  loc <- initGRASS(
+    gisBase = gisBase,
+    gisDbase = "/tmp/grassdb",
+    location = "nc_basic_spm_grass7",
+    mapset = "PERMANENT",
+    override = TRUE
+  )
+  
   # read a categorical raster map
   v1 <- read_RAST("landuse", cat = TRUE, return_format = "terra")
 
@@ -34,6 +40,17 @@ test_that("testing read_RAST using terra", {
 })
 
 test_that("testing read_RAST using sp", {
+  skip_if_not(!isTRUE(grass_available), "GRASS GIS not found on PATH")
+  
+  # initialize grass
+  loc <- initGRASS(
+    gisBase = gisBase,
+    gisDbase = "/tmp/grassdb",
+    location = "nc_basic_spm_grass7",
+    mapset = "PERMANENT",
+    override = TRUE
+  )
+  
   nc_basic <- read_RAST("landuse", cat = TRUE, return_format = "SGDF")
   lvls <- levels(nc_basic$landuse)
 
