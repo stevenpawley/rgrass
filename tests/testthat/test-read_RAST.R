@@ -9,7 +9,7 @@ gisBase <- try(system2("grass", "--config path", stdout = TRUE))
 grass_available <- !inherits(gisBase, "try-catch")
 
 test_that("testing read_RAST using terra", {
-  skip_if_not(!isTRUE(grass_available), "GRASS GIS not found on PATH")
+  skip_if_not(isTRUE(grass_available), "GRASS GIS not found on PATH")
 
   # initialize grass
   loc <- initGRASS(
@@ -40,7 +40,7 @@ test_that("testing read_RAST using terra", {
 })
 
 test_that("testing read_RAST using sp", {
-  skip_if_not(!isTRUE(grass_available), "GRASS GIS not found on PATH")
+  skip_if_not(isTRUE(grass_available), "GRASS GIS not found on PATH")
   
   # initialize grass
   loc <- initGRASS(
