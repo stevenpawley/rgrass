@@ -7,8 +7,8 @@ testdata <- download_nc_basic()
 testthat::test_that("testing initGRASS", {
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
-    gisDbase = testdata$gisDbase,
-    location = testdata$location,
+    gisDbase = "/tmp/grassdb",
+    location = "nc_basic_spm_grass7",
     mapset = "PERMANENT",
     override = TRUE
   )

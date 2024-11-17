@@ -4,11 +4,11 @@ library(sp)
 source("helper.R")
 
 # setup
-testdata <- download_nc_basic()
+# testdata <- download_nc_basic()
 
 loc <- initGRASS(
-  gisDbase = testdata$gisDbase,
-  location = testdata$location,
+  gisDbase = "/tmp/grassdb",
+  location = "nc_basic_spm_grass7",
   mapset = "PERMANENT",
   override = TRUE
 )
