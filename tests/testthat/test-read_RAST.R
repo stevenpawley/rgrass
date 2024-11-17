@@ -21,7 +21,7 @@ test_that("testing read_RAST using terra", {
   expect_false(inMemory(v1))
 
   # check the values and labels
-  lvls <- levels(v1)
+  lvls <- terra::levels(v1)
   expect_equal(lvls[[1]]$value, 0:7)
   expect_equal(
     lvls[[1]]$label,
