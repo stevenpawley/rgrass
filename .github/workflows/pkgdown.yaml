@@ -14,13 +14,12 @@ permissions: read-all
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     # Only restrict concurrency for non-PR jobs
     concurrency:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      GRASS_INSTALLATION: /usr/lib/grass83 
     permissions:
       contents: write
     steps:
@@ -35,7 +34,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y grass-dev libgdal-dev libudunits2-dev libharfbuzz-dev libfribidi-dev
+          sudo apt-get install -y grass libgdal-dev libudunits2-dev libharfbuzz-dev libfribidi-dev
   
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -50,10 +49,8 @@ jobs:
 
       - name: Build site
         run: |
-          gisBase <- system2("grass", "--config path", stdout = TRUE)
-          rgrass::initGRASS(gisBase = gisBase, gisDbase = "/tmp/grassdb", location = "nc_basic_spm_grass7", mapset = "PERMANENT")
           pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, run_dont_run = TRUE)
-        shell: Rscript {0}
+        shell: grass /tmp/grassdb/nc_basic_spm_grass7/PERMANENT --text Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
