@@ -110,6 +110,11 @@
 #'   plot(r, col = terrain.colors(50))
 #' }
 #'
+#' # Check for existing GRASS session running
+#' if (run) {
+#'   loc <- try(gmeta())
+#' }
+#'
 #' if (run) {
 #'   # Initialize a temporary GRASS project using the example data
 #'   loc <- initGRASS(
@@ -142,6 +147,18 @@
 #'   u1 <- read_RAST(c("elev", "slope", "aspect"), return_format = "terra")
 #'   plot(u1[["elev"]], col = terrain.colors(50))
 #' }
+#'
+# # Restore the original GRASS session
+# if (run) {
+#   if (!inherits(loc, "try-error")) {
+#     initGRASS(
+#       gisBase = GRASS_INSTALLATION,
+#       gisDbase = loc$GISDBASE,
+#       location = loc$LOCATION_NAME,
+#       mapset = loc$MAPSET
+#     )
+#   }
+# }
 initGRASS <- function(
     gisBase = NULL, home, SG, gisDbase, addon_base, location,
     mapset, override = FALSE, use_g.dirseps.exe = TRUE, pid,
