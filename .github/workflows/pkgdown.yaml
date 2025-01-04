@@ -47,7 +47,7 @@ jobs:
           unzip /tmp/nc_basic_spm_grass7.zip -d /tmp/grassdb
           rm /tmp/nc_basic_spm_grass7.zip  
 
-      - name: Build site
+      - name: Build pkgdown site
         run: |
           pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, run_dont_run = TRUE)
         shell: grass /tmp/grassdb/nc_basic_spm_grass7/PERMANENT --text Rscript {0}
