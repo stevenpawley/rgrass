@@ -49,8 +49,7 @@ jobs:
 
       - name: Build pkgdown site
         run: |
-          grass /tmp/grassdb/nc_basic_spm_grass7/PERMANENT --text
-          Rscript -e "pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, run_dont_run = TRUE)"
+          grass /tmp/grassdb/nc_basic_spm_grass7/PERMANENT --exec sh -c "Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, run_dont_run = TRUE)'"
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
