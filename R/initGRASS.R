@@ -155,7 +155,8 @@
 #       gisBase = GRASS_INSTALLATION,
 #       gisDbase = loc$GISDBASE,
 #       location = loc$LOCATION_NAME,
-#       mapset = loc$MAPSET
+#       mapset = loc$MAPSET,
+#       override = TRUE
 #     )
 #   }
 # }
