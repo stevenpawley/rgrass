@@ -32,6 +32,8 @@ test_that("testing read_VECT", {
 })
 
 test_that("testing write_VECT", {
+  skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")
+
   shp <- vect(system.file("ex/lux.shp", package = "terra"))
   elev <- rast(system.file("ex/elev.tif", package = "terra"))
   

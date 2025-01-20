@@ -25,6 +25,8 @@ test_that("testing basic initGRASS", {
 })
 
 test_that("testing initialization from SpatRaster", {
+  skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")
+
   meuse_grid <- rast(system.file("ex/meuse.tif", package = "terra"))
   loc <- initGRASS(gisBase = gisBase, SG = meuse_grid, override = TRUE)
   expect_s3_class(loc, "gmeta")
@@ -51,6 +53,8 @@ test_that("testing remove_GISRC", {
 })
 
 test_that("testing set/unset.GIS_LOCK", {
+  skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")
+
   loc <- initGRASS(
     gisBase = gisBase,
     gisDbase = testdata$gisDbase,
