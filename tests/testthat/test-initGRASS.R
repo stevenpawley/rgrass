@@ -11,6 +11,7 @@ test_that("testing basic initGRASS", {
 
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
+    home = tempdir(),
     gisBase = gisBase,
     gisDbase = testdata$gisDbase,
     location = "nc_basic_spm_grass7",
@@ -28,7 +29,7 @@ test_that("testing initialization from SpatRaster", {
   skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")
 
   meuse_grid <- rast(system.file("ex/meuse.tif", package = "terra"))
-  loc <- initGRASS(gisBase = gisBase, SG = meuse_grid, override = TRUE)
+  loc <- initGRASS(home = tempdir(), gisBase = gisBase, SG = meuse_grid, override = TRUE)
   expect_s3_class(loc, "gmeta")
 })
 
@@ -36,6 +37,7 @@ test_that("testing remove_GISRC", {
   skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")
 
   loc <- initGRASS(
+    home = tempdir(),
     gisBase = gisBase,
     gisDbase = testdata$gisDbase,
     location = "nc_basic_spm_grass7",
@@ -54,8 +56,10 @@ test_that("testing remove_GISRC", {
 
 test_that("testing set/unset.GIS_LOCK", {
   skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")
+  skip_if_not(Sys.info()["sysname"] == "Linux", "test only works on *nix")
 
   loc <- initGRASS(
+    home = tempdir(),
     gisBase = gisBase,
     gisDbase = testdata$gisDbase,
     location = "nc_basic_spm_grass7",
@@ -69,6 +73,7 @@ test_that("testing set/unset.GIS_LOCK", {
   )
 
   loc <- initGRASS(
+    home = tempdir(),
     gisBase = gisBase,
     gisDbase = testdata$gisDbase,
     location = "nc_basic_spm_grass7",
@@ -92,7 +97,7 @@ test_that("testing set/unset.GIS_LOCK", {
   expect_false(
     file.exists(file.path(testdata$gisDbase, "nc_basic_spm_grass7", "user1", ".gislock"))
   )
-  
+
   # test removing the lock
   unset.GIS_LOCK()
   expect_equal(get.GIS_LOCK(), "")
@@ -100,6 +105,7 @@ test_that("testing set/unset.GIS_LOCK", {
   # test removing the GICRC
   expect_error(
     initGRASS(
+      home = tempdir(),
       gisBase = gisBase,
       gisDbase = testdata$gisDbase,
       location = "nc_basic_spm_grass7",
@@ -113,6 +119,7 @@ test_that("testing set/unset.GIS_LOCK", {
 
   expect_no_error(
     initGRASS(
+      home = tempdir(),
       gisBase = gisBase,
       gisDbase = testdata$gisDbase,
       location = "nc_basic_spm_grass7",

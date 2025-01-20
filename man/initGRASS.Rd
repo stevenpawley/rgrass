@@ -139,21 +139,20 @@ run <- nzchar(GRASS_INSTALLATION) &&
        require(terra, quietly = TRUE)
 
 if (run) {
-  # Plot the terra example dataset
+  # Get the terra example dataset
   f <- system.file("ex/elev.tif", package="terra")
   r <- rast(f)
-  plot(r, col = terrain.colors(50))
 }
 
 # Check for existing GRASS session running
 if (run) {
-  loc_existing <- try(gmeta())
+  loc_existing <- try(gmeta(), silent = TRUE)
 }
 
 if (run) {
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
-    GRASS_INSTALLATION,
+    gisBase = GRASS_INSTALLATION,
     home = tempdir(),
     SG = r,
     override = TRUE
@@ -185,8 +184,9 @@ if (run) {
 
 # Restore the original GRASS session
 if (run) {
-  if (!inherits(loc, "try-error")) {
+  if (!inherits(loc_existing, "try-error")) {
     loc <- initGRASS(
+      home = tempdir(),
       gisBase = GRASS_INSTALLATION,
       gisDbase = loc_existing$GISDBASE,
       location = loc_existing$LOCATION_NAME,

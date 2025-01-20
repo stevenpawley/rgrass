@@ -9,6 +9,7 @@ gisBase <- get_gisbase()
 
 if (!is.null(gisBase)) {
   loc <- initGRASS(
+    home = tempdir(),
     gisBase = gisBase,
     gisDbase = testdata$gisDbase,
     location = "nc_basic_spm_grass7",
@@ -43,11 +44,11 @@ test_that("testing read_RAST using sp", {
   # check getting the location
   grass_crs <- execGRASS("g.proj", flags = c("w"), intern = TRUE, ignore.stderr = TRUE)
   grass_crs <- paste(grass_crs, collapse = "\n")
-  
+
   crs_terra <- terra::crs(grass_crs)
   expect_type(crs_terra, "character")
   expect_equal(terra::crs(grass_crs, describe = TRUE)$code, "3358")
-  
+
   crs_sp <- sp::CRS(terra::crs(grass_crs))
   expect_s4_class(crs_sp, "CRS")
 

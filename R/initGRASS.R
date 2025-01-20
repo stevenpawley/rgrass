@@ -104,21 +104,20 @@
 #'        require(terra, quietly = TRUE)
 #'
 #' if (run) {
-#'   # Plot the terra example dataset
+#'   # Get the terra example dataset
 #'   f <- system.file("ex/elev.tif", package="terra")
 #'   r <- rast(f)
-#'   plot(r, col = terrain.colors(50))
 #' }
 #'
 #' # Check for existing GRASS session running
 #' if (run) {
-#'   loc_existing <- try(gmeta())
+#'   loc_existing <- try(gmeta(), silent = TRUE)
 #' }
 #'
 #' if (run) {
 #'   # Initialize a temporary GRASS project using the example data
 #'   loc <- initGRASS(
-#'     GRASS_INSTALLATION,
+#'     gisBase = GRASS_INSTALLATION,
 #'     home = tempdir(),
 #'     SG = r,
 #'     override = TRUE
@@ -150,8 +149,9 @@
 #'
 #' # Restore the original GRASS session
 #' if (run) {
-#'   if (!inherits(loc, "try-error")) {
+#'   if (!inherits(loc_existing, "try-error")) {
 #'     loc <- initGRASS(
+#'       home = tempdir(),
 #'       gisBase = GRASS_INSTALLATION,
 #'       gisDbase = loc_existing$GISDBASE,
 #'       location = loc_existing$LOCATION_NAME,
@@ -356,13 +356,15 @@ initGRASS <- function(
                    envir = environment()
       )
     }
-    fn_gisrc <- "junk"
-    if (isTRUE(file.access(".", 2) == 0)) {
-      Sys.setenv(GISRC = fn_gisrc)
-    } else {
-      warning("working directory not writable, using tempfile for GISRC")
-      Sys.setenv(GISRC = paste0(tempfile(), "_", fn_gisrc))
-    }
+
+    # fn_gisrc <- "junk"
+    # if (isTRUE(file.access(".", 2) == 0)) {
+    #   Sys.setenv(GISRC = fn_gisrc)
+    # } else {
+    #   warning("working directory not writable, using tempfile for GISRC")
+    #   Sys.setenv(GISRC = paste0(tempfile(), "_", fn_gisrc))
+    # }
+
     cat("GISDBASE:", getwd(), "\n", file = Sys.getenv("GISRC"))
     cat("LOCATION_NAME: <UNKNOWN>", "\n",
         file = Sys.getenv("GISRC"),

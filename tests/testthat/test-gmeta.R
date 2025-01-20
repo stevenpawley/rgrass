@@ -11,6 +11,7 @@ testthat::test_that("testing gmeta", {
 
   # Initialize a temporary GRASS project using the example data
   loc <- initGRASS(
+    home = tempdir(),
     gisBase = gisBase,
     gisDbase = testdata$gisDbase,
     location = "nc_basic_spm_grass7",
@@ -42,7 +43,7 @@ testthat::test_that("testing gmeta", {
   # Test just returning the projection
   meta4 <- getLocationProj()
   expect_equal(meta4, meta$proj4)
-  
+
   meta4 <- getLocationProj(g.proj_WKT = FALSE)
   expect_equal(meta4, paste(crs("epsg:3358", proj = TRUE), "+type=crs"))
 

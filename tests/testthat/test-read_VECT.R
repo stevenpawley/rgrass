@@ -12,6 +12,7 @@ test_that("testing read_VECT", {
 
   if (!is.null(gisBase)) {
     loc <- initGRASS(
+      home = tempdir(),
       gisBase = gisBase,
       gisDbase = testdata$gisDbase,
       location = "nc_basic_spm_grass7",
@@ -36,8 +37,8 @@ test_that("testing write_VECT", {
 
   shp <- vect(system.file("ex/lux.shp", package = "terra"))
   elev <- rast(system.file("ex/elev.tif", package = "terra"))
-  
-  loc <- initGRASS(gisBase = gisBase, SG = elev, override = TRUE)
+
+  loc <- initGRASS(home = tempdir(), gisBase = gisBase, SG = elev, override = TRUE)
   write_VECT(shp, "lux")
 
   lux <- read_VECT("lux")
@@ -56,6 +57,7 @@ test_that("testing vect2neigh", {
 
   if (!is.null(gisBase)) {
     loc <- initGRASS(
+      home = tempdir(),
       gisBase = gisBase,
       gisDbase = testdata$gisDbase,
       location = "nc_basic_spm_grass7",
