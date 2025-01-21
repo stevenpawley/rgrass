@@ -33,10 +33,10 @@ get_gisbase <- function() {
   if (Sys.info()["sysname"] == "Linux") {
     gisBase <- try(system2("grass", "--config path", stdout = TRUE), silent = TRUE)
   } else {
-    gisBase <- try(Sys.getenv("GRASS_INSTALLATION"), silent = TRUE)
+    gisBase <- Sys.getenv("GRASS_INSTALLATION")
   }
 
-  if (inherits(gisBase, "try-error")) {
+  if (inherits(gisBase, "try-error") | gisBase == "") {
     message("GRASS GIS not found on PATH")
     return(NULL)
   }

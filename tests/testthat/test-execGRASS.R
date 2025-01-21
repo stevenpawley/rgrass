@@ -56,10 +56,9 @@ test_that("testing basic doGRASS, execGRASS, stringexecGRASS", {
 
   # Try executing 'r.stats' command which will fail because "fire_blocksgg"
   # does not exist in the mapset
-  # TODO execGRASS error does not appear as an error on windows
-  expect_equal(
+  expect_error(
     res <- execGRASS("r.stats", input = "fire_blocksgg", flags = c("c", "n")),
-    1
+    "ERROR:"
   )
 
   # Test using an invalid parameter

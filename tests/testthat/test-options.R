@@ -164,7 +164,8 @@ test_that("testing legacyExecOption option", {
     expect_true(get.legacyExecOption())
   }
 
-  res <- execGRASS("r.stats", input = "elevation", flags = c("C", "n"))
+  res <- execGRASS("r.stats", input = "elevation", flags = c("C", "n"),
+                   ignore.stderr = TRUE)
 
   if (.Platform$OS.type != "windows") {
     expect_named(attributes(res), c("resOut", "resErr"))
