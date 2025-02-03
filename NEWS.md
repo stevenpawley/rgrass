@@ -1,4 +1,4 @@
-# **rgrass** version 0.5-1 (2025-01-31)
+# **rgrass** version 0.5-1 (2025-02-02)
 
 - see #96, transfer maintainership to Steven Pawley
 
