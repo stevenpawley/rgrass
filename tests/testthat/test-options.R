@@ -1,12 +1,5 @@
 library(testthat)
 library(terra)
-source("helper.R")
-
-# setup
-testdata <- download_nc_basic()
-withr::defer(fs::dir_delete(testdata$gisDbase))
-
-gisBase <- get_gisbase()
 
 test_that("testing ignore.stderrOption", {
   skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")

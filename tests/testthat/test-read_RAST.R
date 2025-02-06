@@ -1,13 +1,6 @@
 library(testthat)
 library(terra)
 library(sp)
-source("helper.R")
-
-# setup (share grass session across tests)
-testdata <- download_nc_basic()
-withr::defer(fs::dir_delete(testdata$gisDbase))
-
-gisBase <- get_gisbase()
 
 if (!is.null(gisBase)) {
   loc <- initGRASS(
