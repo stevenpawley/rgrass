@@ -4,6 +4,8 @@ source("helper.R")
 
 # setup
 testdata <- download_nc_basic()
+withr::defer(fs::dir_delete(testdata$gisDbase))
+
 gisBase <- get_gisbase()
 
 test_that("testing basic doGRASS, execGRASS, stringexecGRASS", {

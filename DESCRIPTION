@@ -22,7 +22,9 @@ Suggests:
     stars,
     raster (>= 3.6-3),
     codetools,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    withr,
+    fs
 VignetteBuilder: knitr
 SystemRequirements: GRASS (>= 7)
 License: GPL (>= 2)

@@ -58,16 +58,6 @@ jobs:
         R -e "install.packages(c('remotes', 'rcmdcheck'))"
         R -e "remotes::install_deps(dependencies = TRUE)"
         R -e "install.packages('terra', repos = 'https://cloud.r-project.org/', type = 'source')"
-
-    - name: Download test dataset
-      run: |
-        wget https://grass.osgeo.org/sampledata/north_carolina/nc_basic_spm_grass7.zip -O /tmp/nc_basic_spm_grass7.zip
-        unzip /tmp/nc_basic_spm_grass7.zip -d /tmp/grassdb
-        rm /tmp/nc_basic_spm_grass7.zip
-      
-    # - name: Run R CMD check
-    #   run: |
-    #     R -e "rcmdcheck::rcmdcheck(args = c('--no-manual', '--no-build-vignettes'), error_on = 'error', check_dir = 'check')"
     
     - uses: r-lib/actions/check-r-package@v2
       with:

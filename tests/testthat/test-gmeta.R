@@ -4,6 +4,8 @@ source("helper.R")
 
 # setup
 testdata <- download_nc_basic()
+withr::defer(fs::dir_delete(testdata$gisDbase))
+
 gisBase <- get_gisbase()
 
 testthat::test_that("testing gmeta", {
