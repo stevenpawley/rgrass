@@ -15,6 +15,7 @@ download_nc_basic <- function() {
       file.path(tmpdir, "nc_basic_spm_grass7.zip"),
       exdir = file.path(tmpdir, "grassdb")
     )
+    unlink(file.path(tmpdir, "nc_basic_spm_grass7.zip"))
   }
 
   dataset <- list(

@@ -1,3 +1,7 @@
+# **rgrass** version 0.5-2 (2025-02-13)
+
+- minor change to testsuite to ensure that temporary directory is cleaned up after tests
+
 # **rgrass** version 0.5-1 (2025-02-02)
 
 - see #96, transfer maintainership to Steven Pawley
