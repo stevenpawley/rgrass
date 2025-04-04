@@ -1,7 +1,5 @@
 .GRASS_CACHE <- new.env(FALSE, parent = globalenv())
 
-if (!exists("Sys.setenv", envir = baseenv())) Sys.setenv <- Sys.putenv
-
 .onLoad <- function(lib, pkg) {
   assign(".GRASS_old.GRASS_PAGER", Sys.getenv("GRASS_PAGER"), envir = .GRASS_CACHE)
   Sys.setenv("GRASS_PAGER" = "cat")
