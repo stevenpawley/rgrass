@@ -164,7 +164,7 @@ initGRASS <- function(
     gisBase = NULL, home, SG, gisDbase, addon_base, location,
     mapset, override = FALSE, use_g.dirseps.exe = TRUE, pid,
     remove_GISRC = FALSE, ignore.stderr = get.ignore.stderrOption()) {
-  # check for existing GRASS session from rc filenaaame specified in GISRC
+  # check for existing GRASS session from rc filename specified in GISRC
   if (nchar(Sys.getenv("GISRC")) > 0 && !override) {
     ask_override(
       paste0(
@@ -177,7 +177,7 @@ initGRASS <- function(
     )
   }
 
-  # check for lockfile specified in the GIS_LOCK env vr
+  # check for lockfile specified in the GIS_LOCK env variable
   if (nchar(get.GIS_LOCK()) > 0) {
     if (!override) {
       ask_override(
@@ -194,13 +194,16 @@ initGRASS <- function(
   # set PID if not provided
   if (missing(pid)) pid <- round(runif(1, 1, 1000))
   pid <- as.integer(pid)
-  stopifnot(!is.na(pid))
-  stopifnot(is.logical(override))
-  stopifnot(length(override) == 1)
-  stopifnot(is.logical(use_g.dirseps.exe))
-  stopifnot(length(use_g.dirseps.exe) == 1)
-  stopifnot(is.logical(remove_GISRC))
-  stopifnot(length(remove_GISRC) == 1)
+  
+  stopifnot(
+    !is.na(pid),
+    is.logical(override),
+    length(override) == 1,
+    is.logical(use_g.dirseps.exe),
+    length(use_g.dirseps.exe) == 1,
+    is.logical(remove_GISRC),
+    length(remove_GISRC) == 1
+  )
 
   # check for gisBase argument or GRASS_INSTALLATION
   # otherwise attempt to scrape it from the shell
@@ -249,21 +252,37 @@ initGRASS <- function(
     }
   }
 
-  # check if the gisBase path is valid
-  if (!file.exists(gisBase)) stop(paste(gisBase, "not found"))
-  if (!file.info(gisBase)$isdir[1]) stop(gisBase, " is not a directory")
+  # check if the gisbase path is valid
+  if (!file.exists(gisBase)) {
+    stop(paste(gisBase, "not found"))
+  }
+  
+  if (!file.info(gisBase)$isdir[1]) {
+    stop(gisBase, " is not a directory")
+  }
+  
   bin_is_dir <- file.info(file.path(gisBase, "bin"))$isdir[1]
+  
   if (is.na(bin_is_dir)) {
     stop(gisBase, " does not contain bin, the directory with GRASS programs")
   }
-  if (!bin_is_dir) stop(gisBase, "/bin is not a directory")
+  
+  if (!bin_is_dir) {
+    stop(gisBase, "/bin is not a directory")
+  }
+  
+  # check if the gisbase/scripts path is valid
   scripts_is_dir <- file.info(file.path(gisBase, "scripts"))$isdir[1]
+  
   if (is.na(scripts_is_dir)) {
     stop(gisBase, " does not contain scripts, the directory with GRASS scripts")
   }
-  if (!scripts_is_dir) stop(gisBase, "/scripts is not a directory")
+  
+  if (!scripts_is_dir) {
+    stop(gisBase, "/scripts is not a directory")
+  }
 
-  # check for the version of GRASS
+  # retrieve the version of GRASS
   gv <- readLines(file.path(gisBase, "etc/VERSIONNUMBER"))
   gv <- substring(gv, 1, 1)
 
