@@ -17,7 +17,7 @@
   Sys.setenv("GRASS_PAGER" = "cat")
   Sys.setenv("GRASS_MESSAGE_FORMAT" = "text")
 
-  # set up the GRASS_CACHE environment
+  # set environment vars to indicate whether GRASS is running
   assign("INIT_USED", FALSE, envir = .GRASS_CACHE)
   assign("remove_GISRC", FALSE, envir = .GRASS_CACHE)
   assign("cmdCACHE", list(), envir = .GRASS_CACHE)
@@ -55,7 +55,7 @@
   gisrc <- Sys.getenv("GISRC")
   loc <- Sys.getenv("LOCATION_NAME")
 
-  if (nchar(gisrc) == 0) {
+  if (!nzchar(gisrc)) {
     gv <- "(GRASS not running)"
   } else {
     gv <- .grassVersion()
@@ -66,7 +66,7 @@
     }
 
     assign("GV", gv, envir = .GRASS_CACHE)
-    if (nchar(loc) == 0) {
+    if (!nzchar(loc)) {
       loc <- read.dcf(gisrc)[1, "LOCATION_NAME"]
     }
   }
@@ -74,7 +74,7 @@
   startup_message <- paste0(
     "GRASS GIS interface loaded ",
     "with GRASS version: ", gv, "\n",
-    ifelse(nchar(loc) == 0, "", paste0("and location: ", loc, "\n"))
+    ifelse(!nzchar(loc), "", paste0("and location: ", loc, "\n"))
   )
   packageStartupMessage(startup_message, appendLF = FALSE)
 }

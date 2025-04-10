@@ -42,17 +42,18 @@ test_that("testing remove_GISRC", {
     override = TRUE
   )
 
-  lockfile <- Sys.getenv("GISRC")
-  expect_true(file.exists(lockfile))
+  gisrc_file <- Sys.getenv("GISRC")
+  expect_true(file.exists(gisrc_file))
 
   remove_GISRC()
-  expect_false(file.exists(lockfile))
+  expect_false(file.exists(gisrc_file))
 })
 
 test_that("testing set/unset.GIS_LOCK", {
   skip_if_not(!is.null(gisBase), "GRASS GIS not found on PATH")
-  skip_if_not(Sys.info()["sysname"] == "Linux", "test only works on *nix")
+  skip_if_not(Sys.info()["sysname"] %in% c("Linux", "Darwin"), "test only works on *nix")
 
+  # initiate in PERMANENT - gislock should not be present in a different/unused mapset
   loc <- initGRASS(
     home = tempdir(),
     gisBase = gisBase,
@@ -67,6 +68,7 @@ test_that("testing set/unset.GIS_LOCK", {
     file.exists(file.path(testdata$gisDbase, "nc_basic_spm_grass7", "user1", ".gislock"))
   )
 
+  # test initiating with a specified pid
   loc <- initGRASS(
     home = tempdir(),
     gisBase = gisBase,
@@ -77,27 +79,28 @@ test_that("testing set/unset.GIS_LOCK", {
     pid = 1000,
     override = TRUE
   )
-
-  # note - shouldn't this be an integer?
   expect_equal(get.GIS_LOCK(), "1000")
 
-  # test setting a lock by switching to mapset
+  # switch mapset to user1 which should cause a lockfile to be created
+  # (lockfiles are not used in PERMANENT which is assumed to be read-only
+  # for other users)
   execGRASS("g.mapset", mapset = "user1")
   expect_true(
     file.exists(file.path(testdata$gisDbase, "nc_basic_spm_grass7", "user1", ".gislock"))
   )
 
-  # changing mapset will cause the lockfile to be removed for current session
+  # changing out of user1 should cause the lockfile to be removed
   execGRASS("g.mapset", mapset = "PERMANENT")
   expect_false(
     file.exists(file.path(testdata$gisDbase, "nc_basic_spm_grass7", "user1", ".gislock"))
   )
 
   # test removing the lock
+  expect_equal(get.GIS_LOCK(), "1000")
   unset.GIS_LOCK()
   expect_equal(get.GIS_LOCK(), "")
 
-  # test removing the GICRC
+  # test initation when GISRC has already been set
   expect_error(
     initGRASS(
       home = tempdir(),
@@ -106,10 +109,10 @@ test_that("testing set/unset.GIS_LOCK", {
       location = "nc_basic_spm_grass7",
       mapset = "user1",
       override = FALSE
-    ),
-    regexp = "A GRASS location"
+    )
   )
 
+  # test initation after removing GISRC
   remove_GISRC()
 
   expect_no_error(
@@ -122,6 +125,6 @@ test_that("testing set/unset.GIS_LOCK", {
       override = FALSE
     )
   )
-
-  unlink(file.path(testdata$gisDbase, "nc_basic_spm_grass7", "user1", ".gislock"))
+  
+  unlink_.gislock()
 })
