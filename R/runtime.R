@@ -57,7 +57,7 @@ set_addons_path <- function(addon_base, gv) {
   if (is.null(addon_base)) {
     if (Sys.info()["sysname"] == "Darwin") {
       addon_base <-
-        file.path(Sys.getenv("HOME"), "Library", paste("GRASS", gv$minor), "Addons")
+        file.path(Sys.getenv("HOME"), "Library", "GRASS", gv$minor, "Addons")
     } else {
       addon_base <-
         file.path(Sys.getenv("HOME"), paste0(".grass", gv$major), "addons")
@@ -80,8 +80,8 @@ set_addons_path <- function(addon_base, gv) {
   ))
   
   if (any(addon_subdirs)) {
-    set_path_variable("GRASS_ADDON_BASE", file.path(addon_base, "bin"))
-    set_path_variable("GRASS_ADDON_BASE", file.path(addon_base, "scripts"))
+    set_path_variable("PATH", file.path(addon_base, "bin"))
+    set_path_variable("PATH", file.path(addon_base, "scripts"))
   }
 }
 
