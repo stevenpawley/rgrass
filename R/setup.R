@@ -11,7 +11,7 @@
 setup_runtime_env_unix <-
   function(gisBase, home, addon_base, override, gisDbase) {
     # set home directory (or use USERPROFILE on windows
-    set_home_path_variable()
+    set_home_path_variable(home)
     
     # set GRASS installation directory environment variable
     Sys.setenv(GISBASE = gisBase)
@@ -48,8 +48,8 @@ setup_runtime_env_windows <-
   function(gisBase, home, addon_base, use_g.dirseps.exe, override, 
            gisDbase) {
     # set home directory (or use USERPROFILE on windows
-    set_home_path_variable()
-    
+    set_home_path_variable(home)
+
     # set GRASS installation directory environment variable
     Sys.setenv(GISBASE = gisBase)
 

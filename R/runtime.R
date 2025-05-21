@@ -1,14 +1,19 @@
-#' Set the home path variable
+#' Get the home path variable
 #'
+#' @param home_path path to the home directory
 #' @returns home path
 #' @keywords internal
-set_home_path_variable <- function() {
-  if (.Platform$OS.type == "windows") {
-    home <- Sys.getenv("USERPROFILE")
-    Sys.setenv(HOME = home)
-  } else {
-    home <- Sys.getenv("HOME")
+set_home_path_variable <- function(home = NULL) {
+  if (is.null(home)) {
+    if (.Platform$OS.type == "windows") {
+      home <- Sys.getenv("USERPROFILE")
+      Sys.setenv(HOME = home)
+    } else {
+      home <- Sys.getenv("HOME")
+    }
   }
+  
+  Sys.setenv(HOME = home)
   return(home)
 }
 
