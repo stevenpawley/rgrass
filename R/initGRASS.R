@@ -223,7 +223,7 @@ initGRASS <- function(
   validate_gisbase(gisBase)
 
   # retrieve the version of GRASS
-  gv <- grass_major_version(gisBase)
+  gv <- grass_version(gisBase)
 
   # set GRASS startup environment variables
   platform <- get("SYS", envir = .GRASS_CACHE)
@@ -237,7 +237,7 @@ initGRASS <- function(
 
     # set ADDON_BASE environment variable to %APPDATA%\GRASS7\addons if not set
     if (missing(addon_base)) {
-      addon_base <- paste0(Sys.getenv("APPDATA"), "/GRASS", gv, "/addons")
+      addon_base <- paste0(Sys.getenv("APPDATA"), "/GRASS", gv$major, "/addons")
     }
     addon_res <- file.exists(addon_base, paste0(addon_base, "/bin"))
     if (any(addon_res)) Sys.setenv("GRASS_ADDON_BASE" = addon_base)
@@ -322,7 +322,7 @@ initGRASS <- function(
     }
 
     # set GISRC environment variable to the location of the .grassrc file
-    Sys.setenv(GISRC = paste0(Sys.getenv("HOME"), "\\.grassrc", gv))
+    Sys.setenv(GISRC = paste0(Sys.getenv("HOME"), "\\.grassrc", gv$major))
 
     if (file.exists(Sys.getenv("GISRC")) && !override) {
       ask_override(
@@ -373,7 +373,7 @@ initGRASS <- function(
     }
 
     if (missing(addon_base)) {
-      addon_base <- paste0(Sys.getenv("HOME"), "/.grass", gv, "/addons")
+      addon_base <- paste0(Sys.getenv("HOME"), "/.grass", gv$major, "/addons")
     }
 
     addon_res <- file.exists(
@@ -408,7 +408,7 @@ initGRASS <- function(
     }
 
     # FIXME Sys.info()["sysname"] == "Darwin"
-    Sys.setenv(GISRC = paste0(home, "/.grassrc", gv))
+    Sys.setenv(GISRC = paste0(home, "/.grassrc", gv$major))
 
     # FIXME
     if (file.exists(Sys.getenv("GISRC")) && !override) {

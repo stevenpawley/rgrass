@@ -69,22 +69,29 @@ test_that("validate_gisbase rejects invalid installation layouts", {
   expect_error(validate_gisbase(grass_home), "does not contain scripts")
 })
 
-test_that("grass_major_version reads the installed GRASS version", {
+test_that("grass_version reads cumulative GRASS version strings", {
   grass_home <- tempfile("grass-installation-")
   dir.create(file.path(grass_home, "etc"), recursive = TRUE)
   withr::defer(unlink(grass_home, recursive = TRUE))
   writeLines("8.4.1", file.path(grass_home, "etc", "VERSIONNUMBER"))
 
-  expect_identical(grass_major_version(grass_home), "8")
+  expect_identical(
+    grass_version(grass_home),
+    list(
+      major = "8",
+      major_minor = "8.4",
+      full = "8.4.1"
+    )
+  )
 })
 
-test_that("grass_major_version requires a version file", {
+test_that("grass_version requires a version file", {
   grass_home <- tempfile("grass-installation-")
   dir.create(file.path(grass_home, "etc"), recursive = TRUE)
   withr::defer(unlink(grass_home, recursive = TRUE))
 
   expect_error(
-    suppressWarnings(grass_major_version(grass_home)),
+    suppressWarnings(grass_version(grass_home)),
     "cannot open the connection"
   )
 })

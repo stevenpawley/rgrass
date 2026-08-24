@@ -83,15 +83,20 @@ validate_gisbase <- function(gisBase) {
 }
 
 
-#' Extract the GRASS major version by scraping from the GRASS CLI
+#' Get the GRASS GIS version
 #'
-#' @param gisBase path to the GRASS installation
+#' @param gisBase A character string with the path to the GRASS installation.
 #'
-#' @returns character vector with the GRASS version number. This is only the
-#'  major version, e.g., "8.4.1" will return "8"
+#' @returns A list containing cumulative version strings for the major version,
+#'   major-minor version, and full version.
 #' @keywords internal
-grass_major_version <- function(gisBase) {
+grass_version <- function(gisBase) {
   version_file <- file.path(gisBase, "etc", "VERSIONNUMBER")
   version <- readLines(version_file, warn = FALSE)
-  substring(version, 1, 1)
+
+  list(
+    major = substring(version, 1, 1),
+    major_minor = substring(version, 1, 3),
+    full = substring(version, 1, 5)
+  )
 }
