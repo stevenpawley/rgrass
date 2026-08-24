@@ -164,7 +164,7 @@
 #' }
 initGRASS <- function(
     gisBase = NULL,
-    home,
+    home = NULL,
     SG,
     gisDbase,
     addon_base,
@@ -225,15 +225,14 @@ initGRASS <- function(
   # retrieve the version of GRASS
   gv <- grass_version(gisBase)
 
+  # set the home directory environment variable
+  home <- set_home_path(home)
+
   # set GRASS startup environment variables
   platform <- get("SYS", envir = .GRASS_CACHE)
 
   if (platform == "WinNat") {
     Sys.setenv(GISBASE = gisBase)
-
-    # set HOME environment variable to USERPROFILE if not set
-    if (missing(home)) home <- Sys.getenv("USERPROFILE")
-    Sys.setenv(HOME = home)
 
     # set ADDON_BASE environment variable to %APPDATA%\GRASS7\addons if not set
     if (missing(addon_base)) {
@@ -367,10 +366,6 @@ initGRASS <- function(
     OSGEO4W_ROOT <- ""
 
     Sys.setenv(GISBASE = gisBase)
-
-    if (missing(home)) {
-      home <- Sys.getenv("HOME")
-    }
 
     if (missing(addon_base)) {
       addon_base <- paste0(Sys.getenv("HOME"), "/.grass", gv$major, "/addons")
