@@ -163,9 +163,18 @@
 #'   }
 #' }
 initGRASS <- function(
-    gisBase = NULL, home, SG, gisDbase, addon_base, location,
-    mapset, override = FALSE, use_g.dirseps.exe = TRUE, pid,
-    remove_GISRC = FALSE, ignore.stderr = get.ignore.stderrOption(),
+    gisBase = NULL,
+    home,
+    SG,
+    gisDbase,
+    addon_base,
+    location,
+    mapset,
+    override = FALSE,
+    use_g.dirseps.exe = TRUE,
+    pid,
+    remove_GISRC = FALSE,
+    ignore.stderr = get.ignore.stderrOption(),
     tempdir = base::tempdir()) {
 
   Sys.setenv(RGRASS_TEMPDIR = tempdir)
@@ -173,11 +182,7 @@ initGRASS <- function(
   # check for existing GRASS session from rc filename specified in GISRC
   if (nchar(Sys.getenv("GISRC")) > 0 && !override) {
     ask_override(
-      paste0(
-        "A GRASS location (defined by ",
-        Sys.getenv("GISRC"),
-        ") is already in use"
-      ),
+      paste0("A GRASS location (defined by ", Sys.getenv("GISRC"), ") is already in use"),
       missing_override = missing(override),
       envir = environment()
     )
@@ -200,102 +205,31 @@ initGRASS <- function(
   # set PID if not provided
   if (missing(pid)) pid <- round(runif(1, 1, 1000))
   pid <- as.integer(pid)
-  
+
   stopifnot(
     !is.na(pid),
-    is.logical(override),
-    length(override) == 1,
-    is.logical(use_g.dirseps.exe),
-    length(use_g.dirseps.exe) == 1,
-    is.logical(remove_GISRC),
-    length(remove_GISRC) == 1
+    "`override` must be a logical" = is.logical(override),
+    "`override` must be of length 1" = length(override) == 1,
+    "`use_g.dirseps.exe` must be a logical" = is.logical(use_g.dirseps.exe),
+    "`use_g.dirseps.exe` must be of length 1" = length(use_g.dirseps.exe) == 1,
+    "`remove_GISRC` must be a logical" = is.logical(remove_GISRC),
+    "`remove_GISRC` must be of length 1" = length(remove_GISRC) == 1
   )
 
-  # check for gisBase argument or GRASS_INSTALLATION
-  # otherwise attempt to scrape it from the shell
+  # get GRASS install from PATH if not provided
   if (is.null(gisBase)) {
-    message(
-      "No gisBase set. Trying to detect from the GRASS_INSTALLATION ",
-      "environment variable."
-    )
-    grass_installation <- Sys.getenv("GRASS_INSTALLATION")
-    stopifnot(is.character(grass_installation))
-    if (nchar(grass_installation) > 0) {
-      message(
-        "Taking gisBase value from GRASS_INSTALLATION: ",
-        grass_installation
-      )
-      gisBase <- grass_installation
-    } else {
-      message(
-        "No GRASS_INSTALLATION environment variable was found.\n",
-        "Trying to set gisBase by running command ",
-        "`grass --config path` (requires grass in the system PATH)."
-      )
-
-      tryCatch({
-        gisBase <-
-          if (.Platform$OS.type == "windows") {
-            shell("grass --config path", intern = TRUE)
-          } else {
-            system("grass --config path", intern = TRUE)
-          }
-      }, error = function(e) {
-        stop(
-          "grass seems to be unavailable in the system PATH.\n",
-          "Either provide the gisBase argument or set a ",
-          "GRASS_INSTALLATION environment variable to provide the ",
-          "gisBase path",
-          call. = FALSE
-        )
-      })
-
-      message(
-        "Taking gisBase value from `grass --config path` output: ",
-        gisBase
-      )
-      stopifnot(length(gisBase) == 1L)
-    }
+    gisBase <- search_grass()
   }
-
-  # check if the gisbase path is valid
-  if (!file.exists(gisBase)) {
-    stop(paste(gisBase, "not found"))
-  }
-  
-  if (!file.info(gisBase)$isdir[1]) {
-    stop(gisBase, " is not a directory")
-  }
-  
-  bin_is_dir <- file.info(file.path(gisBase, "bin"))$isdir[1]
-  
-  if (is.na(bin_is_dir)) {
-    stop(gisBase, " does not contain bin, the directory with GRASS programs")
-  }
-  
-  if (!bin_is_dir) {
-    stop(gisBase, "/bin is not a directory")
-  }
-  
-  # check if the gisbase/scripts path is valid
-  scripts_is_dir <- file.info(file.path(gisBase, "scripts"))$isdir[1]
-  
-  if (is.na(scripts_is_dir)) {
-    stop(gisBase, " does not contain scripts, the directory with GRASS scripts")
-  }
-  
-  if (!scripts_is_dir) {
-    stop(gisBase, "/scripts is not a directory")
-  }
+  validate_gisbase(gisBase)
 
   # retrieve the version of GRASS
   gv <- readLines(file.path(gisBase, "etc/VERSIONNUMBER"))
   gv <- substring(gv, 1, 1)
 
-  # set platform variant environment variables for GRASS
-  SYS <- get("SYS", envir = .GRASS_CACHE)
+  # set GRASS startup environment variables
+  platform <- get("SYS", envir = .GRASS_CACHE)
 
-  if (SYS == "WinNat") {
+  if (platform == "WinNat") {
     Sys.setenv(GISBASE = gisBase)
 
     # set HOME environment variable to USERPROFILE if not set
@@ -430,7 +364,7 @@ initGRASS <- function(
       system(paste("g.dirseps.exe -g", shQuote(gisDbase)), intern = TRUE),
       gisDbase
     )
-  } else if (SYS == "unix") {
+  } else if (platform == "unix") {
     OSGEO4W_ROOT <- ""
 
     Sys.setenv(GISBASE = gisBase)
@@ -509,7 +443,7 @@ initGRASS <- function(
     cat("LOCATION_NAME: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
     cat("MAPSET: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
   } else {
-    stop(paste("Platform variant", SYS, "not supported"))
+    stop(paste("Platform variant", platform, "not supported"))
   }
 
   set.GIS_LOCK(pid)
