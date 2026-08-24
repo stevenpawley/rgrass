@@ -111,3 +111,70 @@ setup_runtime_env_unix <- function(gisBase, addon_base = NULL, gv) {
 
   invisible(NULL)
 }
+
+#' Set Windows runtime environment variables for GRASS GIS
+#'
+#' @param gisBase Path to the GRASS installation.
+#' @param addon_base Optional path to the GRASS add-ons directory.
+#' @param gv Cumulative GRASS version strings returned by [grass_version()].
+#'
+#' @returns The value of `OSGEO4W_ROOT`, invisibly.
+#' @keywords internal
+setup_runtime_env_windows <- function(gisBase, addon_base = NULL, gv) {
+  Sys.setenv(GISBASE = gisBase)
+
+  OSGEO4W_ROOT <- Sys.getenv("OSGEO4W_ROOT")
+
+  if (nzchar(OSGEO4W_ROOT)) {
+    Sys.setenv(
+      GRASS_PROJSHARE = file.path(OSGEO4W_ROOT, "share", "proj")
+    )
+  } else {
+    installation <- gsub("\\\\", "/", toupper(gisBase))
+
+    if (grepl("OSGEO4W.*/APPS/GRASS", installation)) {
+      stop(
+        "NOTE: If using OSGeo4W GRASS, start R in the OSGeo4W shell,\n",
+        "see help(initGRASS) for further details"
+      )
+    }
+
+    if (grepl("QGIS.*/APPS/GRASS", installation)) {
+      stop(
+        paste(
+          "NOTE: If using Windows standalone QGIS GRASS, start R in the QGIS",
+          "standalone OSGeo4W shell, see help(initGRASS) for further details",
+          sep = "\n"
+        )
+      )
+    }
+
+    Sys.setenv(
+      GRASS_PROJSHARE = file.path(gisBase, "share", "proj")
+    )
+  }
+
+  # Configure add-ons first because subsequent calls prepend the core GRASS
+  # directories, giving the installed modules precedence over add-ons.
+  set_addons_path(addon_base, gv)
+
+  # Calls are intentionally in reverse order because each path is prepended.
+  set_path_variable("PATH", file.path(gisBase, "lib"))
+  set_path_variable("PATH", file.path(gisBase, "bin"))
+  set_path_variable("PATH", file.path(gisBase, "extrabin"))
+  set_path_variable("PYTHONPATH", file.path(gisBase, "etc", "python"))
+
+  if (nzchar(OSGEO4W_ROOT)) {
+    Sys.setenv(
+      PYTHONHOME = file.path(OSGEO4W_ROOT, "apps", "Python37")
+    )
+  } else {
+    python_dirs <- list.files(gisBase, pattern = "Python")
+
+    if (length(python_dirs) > 0L) {
+      Sys.setenv(PYTHONHOME = file.path(gisBase, python_dirs[1]))
+    }
+  }
+
+  invisible(OSGEO4W_ROOT)
+}

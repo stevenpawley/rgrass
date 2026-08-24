@@ -232,93 +232,11 @@ initGRASS <- function(
   platform <- get("SYS", envir = .GRASS_CACHE)
 
   if (platform == "WinNat") {
-    Sys.setenv(GISBASE = gisBase)
-
-    # set ADDON_BASE environment variable to %APPDATA%\GRASS7\addons if not set
-    if (is.null(addon_base)) {
-      addon_base <- paste0(Sys.getenv("APPDATA"), "/GRASS", gv$major, "/addons")
-    }
-    addon_res <- file.exists(addon_base, paste0(addon_base, "/bin"))
-    if (any(addon_res)) Sys.setenv("GRASS_ADDON_BASE" = addon_base)
-
-    # set OSGEO4W_ROOT environment variable if not set
-    OSGEO4W_ROOT <- Sys.getenv("OSGEO4W_ROOT")
-
-    if (nchar(OSGEO4W_ROOT) > 0) {
-      Sys.setenv(GRASS_PROJSHARE = paste0(OSGEO4W_ROOT, "\\share\\proj"))
-    } else {
-      unistring <- toupper(gisBase)
-      unistring <- gsub("\\\\", "/", unistring)
-
-      if (length(grep("OSGEO4W.*/APPS/GRASS", unistring)) > 0) {
-        stop(
-          "NOTE: If using OSGeo4W GRASS, start R in the OSGeo4W shell,\n",
-          "see help(initGRASS) for further details"
-        )
-      }
-
-      if (length(grep("QGIS.*/APPS/GRASS", unistring)) > 0) {
-        stop(paste(
-          "NOTE: If using Windows standalone QGIS GRASS, start R in the QGIS standalone",
-          "OSGeo4W shell, see help(initGRASS) for further details",
-          sep = "\n"
-        ))
-      }
-      Sys.setenv(
-        GRASS_PROJSHARE = paste0(Sys.getenv("GISBASE"), "\\share\\proj")
-      )
-    }
-
-    # add various directories to the PATH environment variable
-    Wpath <- Sys.getenv("PATH")
-
-    if (length(grep(basename(Sys.getenv("GISBASE")), Wpath)) < 1) {
-      Sys.setenv(
-        PATH = paste0(Sys.getenv("GISBASE"), "\\lib;", Sys.getenv("PATH"))
-      )
-      Sys.setenv(
-        PATH = paste0(Sys.getenv("GISBASE"), "\\bin;", Sys.getenv("PATH"))
-      )
-      Sys.setenv(
-        PATH = paste0(Sys.getenv("GISBASE"), "\\extrabin;", Sys.getenv("PATH"))
-      )
-
-      if (addon_res[2]) {
-        Sys.setenv(PATH = paste0(
-          Sys.getenv("GRASS_ADDON_BASE"),
-          "\\bin;",
-          Sys.getenv("PATH")
-        ))
-      }
-
-      # set PYTHONPATH environment variable
-      ePyPATH <- Sys.getenv("PYTHONPATH")
-
-      if ((length(grep(basename(Sys.getenv("GISBASE")), ePyPATH)) < 1) ||
-          nchar(ePyPATH) == 0) {
-        GrPyPATH <- file.path(Sys.getenv("GISBASE"), "/etc/python")
-        if (nchar(ePyPATH) > 0) {
-          Sys.setenv(PYTHONPATH = paste(GrPyPATH, ePyPATH, sep = ";"))
-        } else {
-          Sys.setenv(PYTHONPATH = GrPyPATH)
-        }
-      }
-
-      if (nchar(OSGEO4W_ROOT) > 0) {
-        Sys.setenv(
-          PYTHONHOME = paste(OSGEO4W_ROOT, "apps/Python37", sep = "/")
-        )
-      } else {
-        G_B_files <- list.files(Sys.getenv("GISBASE"))
-        Python_dir <- G_B_files[grep("Python", G_B_files)]
-
-        if (length(Python_dir) > 0) {
-          Sys.setenv(
-            PYTHONHOME = paste(Sys.getenv("GISBASE"), Python_dir[1], sep = "/")
-          )
-        }
-      }
-    }
+    OSGEO4W_ROOT <- setup_runtime_env_windows(
+      gisBase = gisBase,
+      addon_base = addon_base,
+      gv = gv
+    )
 
     # set GISRC environment variable to the location of the .grassrc file
     Sys.setenv(GISRC = paste0(Sys.getenv("HOME"), "\\.grassrc", gv$major))

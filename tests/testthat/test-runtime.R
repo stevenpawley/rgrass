@@ -206,3 +206,102 @@ test_that("setup_runtime_env_unix configures GRASS runtime paths", {
     )
   )
 })
+
+test_that("setup_runtime_env_windows configures an OSGeo4W environment", {
+  gisBase <- tempfile("grass-installation-")
+  addon_base <- tempfile("grass-addons-")
+  osgeo_root <- tempfile("osgeo4w-")
+  dir.create(file.path(addon_base, "bin"), recursive = TRUE)
+  dir.create(file.path(addon_base, "scripts"))
+  withr::defer(unlink(addon_base, recursive = TRUE))
+  withr::local_envvar(
+    GISBASE = NA,
+    GRASS_ADDON_BASE = NA,
+    GRASS_PROJSHARE = NA,
+    OSGEO4W_ROOT = osgeo_root,
+    PATH = "/usr/bin",
+    PYTHONPATH = "/usr/lib/python",
+    PYTHONHOME = NA
+  )
+
+  expect_identical(
+    setup_runtime_env_windows(
+      gisBase = gisBase,
+      addon_base = addon_base,
+      gv = list(major = "8", major_minor = "8.4")
+    ),
+    osgeo_root
+  )
+
+  expected_path <- paste(
+    c(
+      file.path(gisBase, "extrabin"),
+      file.path(gisBase, "bin"),
+      file.path(gisBase, "lib"),
+      file.path(addon_base, "bin"),
+      file.path(addon_base, "scripts"),
+      "/usr/bin"
+    ),
+    collapse = .Platform$path.sep
+  )
+
+  expect_identical(Sys.getenv("GISBASE"), gisBase)
+  expect_identical(Sys.getenv("GRASS_ADDON_BASE"), addon_base)
+  expect_identical(Sys.getenv("PATH"), expected_path)
+  expect_identical(
+    Sys.getenv("PYTHONPATH"),
+    paste(
+      c(file.path(gisBase, "etc", "python"), "/usr/lib/python"),
+      collapse = .Platform$path.sep
+    )
+  )
+  expect_identical(
+    Sys.getenv("GRASS_PROJSHARE"),
+    file.path(osgeo_root, "share", "proj")
+  )
+  expect_identical(
+    Sys.getenv("PYTHONHOME"),
+    file.path(osgeo_root, "apps", "Python37")
+  )
+})
+
+test_that("setup_runtime_env_windows detects bundled Python", {
+  gisBase <- tempfile("grass-installation-")
+  dir.create(file.path(gisBase, "Python39"), recursive = TRUE)
+  withr::defer(unlink(gisBase, recursive = TRUE))
+  withr::local_envvar(
+    OSGEO4W_ROOT = NA,
+    PATH = "/usr/bin",
+    PYTHONPATH = NA,
+    PYTHONHOME = NA,
+    GRASS_PROJSHARE = NA
+  )
+
+  setup_runtime_env_windows(
+    gisBase = gisBase,
+    addon_base = tempfile("missing-grass-addons-"),
+    gv = list(major = "8", major_minor = "8.4")
+  )
+
+  expect_identical(
+    Sys.getenv("GRASS_PROJSHARE"),
+    file.path(gisBase, "share", "proj")
+  )
+  expect_identical(
+    Sys.getenv("PYTHONHOME"),
+    file.path(gisBase, "Python39")
+  )
+})
+
+test_that("setup_runtime_env_windows rejects OSGeo4W paths outside its shell", {
+  withr::local_envvar(OSGEO4W_ROOT = NA)
+
+  expect_error(
+    setup_runtime_env_windows(
+      gisBase = "C:/OSGeo4W/apps/grass",
+      addon_base = tempfile("missing-grass-addons-"),
+      gv = list(major = "8", major_minor = "8.4")
+    ),
+    "start R in the OSGeo4W shell"
+  )
+})
