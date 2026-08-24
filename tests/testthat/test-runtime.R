@@ -74,7 +74,7 @@ test_that("set_addons_path configures a custom add-on directory", {
   expect_identical(Sys.getenv("GRASS_ADDON_BASE"), addon_base)
 
   expected_path <- paste(
-    c(file.path(addon_base, "scripts"), file.path(addon_base, "bin"), "/usr/bin"),
+    c(file.path(addon_base, "bin"), file.path(addon_base, "scripts"), "/usr/bin"),
     collapse = .Platform$path.sep
   )
   expect_identical(Sys.getenv("PATH"), expected_path)
@@ -156,4 +156,53 @@ test_that("set_addons_path does not duplicate existing PATH entries", {
   set_addons_path(addon_base, gv = list(major = "8", major_minor = "8.4"))
 
   expect_identical(Sys.getenv("PATH"), existing_path)
+})
+
+test_that("setup_runtime_env_unix configures GRASS runtime paths", {
+  gisBase <- tempfile("grass-installation-")
+  addon_base <- tempfile("grass-addons-")
+  dir.create(file.path(addon_base, "bin"), recursive = TRUE)
+  dir.create(file.path(addon_base, "scripts"))
+  withr::defer(unlink(addon_base, recursive = TRUE))
+  withr::local_envvar(
+    GISBASE = NA,
+    GRASS_ADDON_BASE = NA,
+    PATH = "/usr/bin",
+    LD_LIBRARY_PATH = "/usr/lib",
+    PYTHONPATH = "/usr/lib/python"
+  )
+
+  expect_invisible(
+    setup_runtime_env_unix(
+      gisBase = gisBase,
+      addon_base = addon_base,
+      gv = list(major = "8", major_minor = "8.4")
+    )
+  )
+
+  expected_path <- paste(
+    c(
+      file.path(gisBase, "bin"),
+      file.path(gisBase, "scripts"),
+      file.path(addon_base, "bin"),
+      file.path(addon_base, "scripts"),
+      "/usr/bin"
+    ),
+    collapse = .Platform$path.sep
+  )
+
+  expect_identical(Sys.getenv("GISBASE"), gisBase)
+  expect_identical(Sys.getenv("GRASS_ADDON_BASE"), addon_base)
+  expect_identical(Sys.getenv("PATH"), expected_path)
+  expect_identical(
+    Sys.getenv("LD_LIBRARY_PATH"),
+    paste(c(file.path(gisBase, "lib"), "/usr/lib"), collapse = .Platform$path.sep)
+  )
+  expect_identical(
+    Sys.getenv("PYTHONPATH"),
+    paste(
+      c(file.path(gisBase, "etc", "python"), "/usr/lib/python"),
+      collapse = .Platform$path.sep
+    )
+  )
 })

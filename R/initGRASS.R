@@ -167,7 +167,7 @@ initGRASS <- function(
     home = NULL,
     SG,
     gisDbase,
-    addon_base,
+    addon_base = NULL,
     location,
     mapset,
     override = FALSE,
@@ -235,7 +235,7 @@ initGRASS <- function(
     Sys.setenv(GISBASE = gisBase)
 
     # set ADDON_BASE environment variable to %APPDATA%\GRASS7\addons if not set
-    if (missing(addon_base)) {
+    if (is.null(addon_base)) {
       addon_base <- paste0(Sys.getenv("APPDATA"), "/GRASS", gv$major, "/addons")
     }
     addon_res <- file.exists(addon_base, paste0(addon_base, "/bin"))
@@ -365,42 +365,11 @@ initGRASS <- function(
   } else if (platform == "unix") {
     OSGEO4W_ROOT <- ""
 
-    Sys.setenv(GISBASE = gisBase)
-
-    if (missing(addon_base)) {
-      addon_base <- paste0(Sys.getenv("HOME"), "/.grass", gv$major, "/addons")
-    }
-
-    addon_res <- file.exists(
-      addon_base,
-      paste0(addon_base, "/bin"),
-      paste0(addon_base, "/scripts")
+    setup_runtime_env_unix(
+      gisBase = gisBase,
+      addon_base = addon_base,
+      gv = gv
     )
-
-    if (any(addon_res)) {
-      Sys.setenv("GRASS_ADDON_BASE" = addon_base)
-    }
-
-    ePATH <- Sys.getenv("PATH")
-
-    if (length(grep(basename(Sys.getenv("GISBASE")), ePATH)) < 1) {
-      Sys.setenv(PATH = paste0(
-        Sys.getenv("GISBASE"), "/bin:",
-        Sys.getenv("GISBASE"), "/scripts",
-        ifelse(addon_res[2], paste0(":", Sys.getenv("GRASS_ADDON_BASE"), "/bin"), ""),
-        ifelse(addon_res[3], paste0(":", Sys.getenv("GRASS_ADDON_BASE"), "/scripts"), ""),
-        ifelse(nchar(ePATH) == 0, "", ":"), ePATH
-      ))
-    }
-
-    eLDPATH <- Sys.getenv("LD_LIBRARY_PATH")
-
-    if (length(grep(basename(Sys.getenv("GISBASE")), eLDPATH)) < 1) {
-      Sys.setenv(LD_LIBRARY_PATH = paste0(
-        Sys.getenv("GISBASE"), "/lib:",
-        ifelse(nchar(eLDPATH) == 0, "", ":"), eLDPATH
-      ))
-    }
 
     # FIXME Sys.info()["sysname"] == "Darwin"
     Sys.setenv(GISRC = paste0(home, "/.grassrc", gv$major))
@@ -412,19 +381,6 @@ initGRASS <- function(
         missing_override = missing(override),
         envir = environment()
       )
-    }
-
-    ePyPATH <- Sys.getenv("PYTHONPATH")
-
-    if (length(grep(basename(Sys.getenv("GISBASE")), ePyPATH)) < 1 ||
-        nchar(ePyPATH) == 0) {
-      GrPyPATH <- file.path(Sys.getenv("GISBASE"), "etc", "python")
-
-      if (nchar(ePyPATH) > 0) {
-        Sys.setenv(PYTHONPATH = paste(GrPyPATH, ePyPATH, sep = ":"))
-      } else {
-        Sys.setenv(PYTHONPATH = GrPyPATH)
-      }
     }
 
     if (!missing(gisDbase)) {

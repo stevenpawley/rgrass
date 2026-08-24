@@ -54,7 +54,8 @@ set_path_variable <- function(variable_name, install_path) {
 #'
 #' @param addon_base path to the GRASS addons directory
 #'
-#' @returns NULL
+#' @returns The configured add-on path invisibly, or `NULL` if the directory
+#'   does not exist.
 #' @keywords internal
 set_addons_path <- function(addon_base = NULL, gv) {
   if (is.null(addon_base)) {
@@ -76,13 +77,37 @@ set_addons_path <- function(addon_base = NULL, gv) {
   bin_path <- file.path(addon_base, "bin")
   scripts_path <- file.path(addon_base, "scripts")
 
-  if (dir.exists(bin_path)) {
-    set_path_variable("PATH", bin_path)
-  }
-
   if (dir.exists(scripts_path)) {
     set_path_variable("PATH", scripts_path)
   }
 
+  if (dir.exists(bin_path)) {
+    set_path_variable("PATH", bin_path)
+  }
+
   invisible(addon_base)
+}
+
+#' Set Unix runtime environment variables for GRASS GIS
+#'
+#' @param gisBase Path to the GRASS installation.
+#' @param addon_base Optional path to the GRASS add-ons directory.
+#' @param gv Cumulative GRASS version strings returned by [grass_version()].
+#'
+#' @returns `NULL`, invisibly.
+#' @keywords internal
+setup_runtime_env_unix <- function(gisBase, addon_base = NULL, gv) {
+  Sys.setenv(GISBASE = gisBase)
+
+  # Configure add-ons first because subsequent calls prepend the core GRASS
+  # directories, giving the installed modules precedence over add-ons.
+  set_addons_path(addon_base, gv)
+
+  # Calls are intentionally in reverse order because each path is prepended.
+  set_path_variable("PATH", file.path(gisBase, "scripts"))
+  set_path_variable("PATH", file.path(gisBase, "bin"))
+  set_path_variable("LD_LIBRARY_PATH", file.path(gisBase, "lib"))
+  set_path_variable("PYTHONPATH", file.path(gisBase, "etc", "python"))
+
+  invisible(NULL)
 }
