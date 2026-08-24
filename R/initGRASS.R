@@ -223,8 +223,7 @@ initGRASS <- function(
   validate_gisbase(gisBase)
 
   # retrieve the version of GRASS
-  gv <- readLines(file.path(gisBase, "etc/VERSIONNUMBER"))
-  gv <- substring(gv, 1, 1)
+  gv <- grass_major_version(gisBase)
 
   # set GRASS startup environment variables
   platform <- get("SYS", envir = .GRASS_CACHE)
