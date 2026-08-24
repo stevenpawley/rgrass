@@ -55,3 +55,105 @@ test_that("set_path_variable compares complete path entries", {
   )
   expect_identical(Sys.getenv(variable), expected)
 })
+
+test_that("set_addons_path configures a custom add-on directory", {
+  addon_base <- tempfile("grass-addons-")
+  dir.create(addon_base)
+  dir.create(file.path(addon_base, "bin"))
+  dir.create(file.path(addon_base, "scripts"))
+  withr::defer(unlink(addon_base, recursive = TRUE))
+  withr::local_envvar(
+    GRASS_ADDON_BASE = NA,
+    PATH = "/usr/bin"
+  )
+
+  expect_identical(
+    set_addons_path(addon_base, gv = list(major = "8", major_minor = "8.4")),
+    invisible(addon_base)
+  )
+  expect_identical(Sys.getenv("GRASS_ADDON_BASE"), addon_base)
+
+  expected_path <- paste(
+    c(file.path(addon_base, "scripts"), file.path(addon_base, "bin"), "/usr/bin"),
+    collapse = .Platform$path.sep
+  )
+  expect_identical(Sys.getenv("PATH"), expected_path)
+})
+
+test_that("set_addons_path adds only an existing bin directory", {
+  addon_base <- tempfile("grass-addons-")
+  dir.create(file.path(addon_base, "bin"), recursive = TRUE)
+  withr::defer(unlink(addon_base, recursive = TRUE))
+  withr::local_envvar(
+    GRASS_ADDON_BASE = NA,
+    PATH = "/usr/bin"
+  )
+
+  set_addons_path(addon_base, gv = list(major = "8", major_minor = "8.4"))
+
+  expected_path <- paste(
+    c(file.path(addon_base, "bin"), "/usr/bin"),
+    collapse = .Platform$path.sep
+  )
+  expect_identical(Sys.getenv("PATH"), expected_path)
+  expect_false(file.path(addon_base, "scripts") %in% strsplit(
+    Sys.getenv("PATH"), .Platform$path.sep, fixed = TRUE
+  )[[1]])
+})
+
+test_that("set_addons_path adds only an existing scripts directory", {
+  addon_base <- tempfile("grass-addons-")
+  dir.create(file.path(addon_base, "scripts"), recursive = TRUE)
+  withr::defer(unlink(addon_base, recursive = TRUE))
+  withr::local_envvar(
+    GRASS_ADDON_BASE = NA,
+    PATH = "/usr/bin"
+  )
+
+  set_addons_path(addon_base, gv = list(major = "8", major_minor = "8.4"))
+
+  expected_path <- paste(
+    c(file.path(addon_base, "scripts"), "/usr/bin"),
+    collapse = .Platform$path.sep
+  )
+  expect_identical(Sys.getenv("PATH"), expected_path)
+  expect_false(file.path(addon_base, "bin") %in% strsplit(
+    Sys.getenv("PATH"), .Platform$path.sep, fixed = TRUE
+  )[[1]])
+})
+
+test_that("set_addons_path ignores a missing add-on directory", {
+  addon_base <- tempfile("missing-grass-addons-")
+  withr::local_envvar(
+    GRASS_ADDON_BASE = NA,
+    PATH = "/usr/bin"
+  )
+
+  expect_null(
+    set_addons_path(addon_base, gv = list(major = "8", major_minor = "8.4"))
+  )
+  expect_identical(Sys.getenv("GRASS_ADDON_BASE"), "")
+  expect_identical(Sys.getenv("PATH"), "/usr/bin")
+})
+
+test_that("set_addons_path does not duplicate existing PATH entries", {
+  addon_base <- tempfile("grass-addons-")
+  bin_path <- file.path(addon_base, "bin")
+  scripts_path <- file.path(addon_base, "scripts")
+  dir.create(bin_path, recursive = TRUE)
+  dir.create(scripts_path)
+  withr::defer(unlink(addon_base, recursive = TRUE))
+
+  existing_path <- paste(
+    c(scripts_path, bin_path, "/usr/bin"),
+    collapse = .Platform$path.sep
+  )
+  withr::local_envvar(
+    GRASS_ADDON_BASE = NA,
+    PATH = existing_path
+  )
+
+  set_addons_path(addon_base, gv = list(major = "8", major_minor = "8.4"))
+
+  expect_identical(Sys.getenv("PATH"), existing_path)
+})

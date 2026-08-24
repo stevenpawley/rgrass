@@ -49,3 +49,40 @@ set_path_variable <- function(variable_name, install_path) {
 
   invisible(Sys.getenv(variable_name))
 }
+
+#' Set the path to GRASS add-ons directory
+#'
+#' @param addon_base path to the GRASS addons directory
+#'
+#' @returns NULL
+#' @keywords internal
+set_addons_path <- function(addon_base = NULL, gv) {
+  if (is.null(addon_base)) {
+    addon_base <- if (.Platform$OS.type == "windows") {
+      file.path(Sys.getenv("APPDATA"), paste0("GRASS", gv$major), "addons")
+    } else if (Sys.info()[["sysname"]] == "Darwin") {
+      file.path(Sys.getenv("HOME"), "Library", "GRASS", gv$major_minor, "Addons")
+    } else {
+      file.path(Sys.getenv("HOME"), paste0(".grass", gv$major), "addons")
+    }
+  }
+
+  if (!dir.exists(addon_base)) {
+    return(invisible(NULL))
+  }
+
+  Sys.setenv(GRASS_ADDON_BASE = addon_base)
+
+  bin_path <- file.path(addon_base, "bin")
+  scripts_path <- file.path(addon_base, "scripts")
+
+  if (dir.exists(bin_path)) {
+    set_path_variable("PATH", bin_path)
+  }
+
+  if (dir.exists(scripts_path)) {
+    set_path_variable("PATH", scripts_path)
+  }
+
+  invisible(addon_base)
+}
