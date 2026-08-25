@@ -51,6 +51,79 @@ create_session_directories <- function(
   )
 }
 
+#' Write the GRASS session configuration file
+#'
+#' Creates the platform-specific GISRC path and writes the values identifying
+#' the active GRASS database, location, and mapset.
+#'
+#' @param gisDbase Path to the GRASS database.
+#' @param location Name of the GRASS location.
+#' @param mapset Name of the GRASS mapset.
+#' @param home Directory in which to create the GISRC file.
+#' @param gv GRASS version information returned by [grass_version()].
+#' @param platform GRASS platform variant (`"unix"` or `"WinNat"`).
+#' @param override Whether an existing GISRC file may be overwritten.
+#' @param missing_override Whether `override` was omitted from [initGRASS()].
+#' @param use_g.dirseps.exe Whether to convert Windows path separators with
+#'   `g.dirseps.exe`.
+#' @param tempdir Directory used for a fallback GISRC file when the current
+#'   working directory is not writable on Windows.
+#'
+#' @returns The path to the GISRC file, invisibly.
+#' @keywords internal
+write_gisrc <- function(
+    gisDbase,
+    location,
+    mapset,
+    home,
+    gv,
+    platform,
+    override = FALSE,
+    missing_override = FALSE,
+    use_g.dirseps.exe = TRUE,
+    tempdir = base::tempdir()) {
+  gisrc <- if (platform == "WinNat") {
+    paste0(home, "\\.grassrc", gv$major)
+  } else if (platform == "unix") {
+    file.path(home, paste0(".grassrc", gv$major))
+  } else {
+    stop(paste("Platform variant", platform, "not supported"))
+  }
+
+  if (file.exists(gisrc) && !override) {
+    ask_override(
+      paste("A GISRC file", gisrc, "already exists"),
+      missing_override = missing_override,
+      envir = parent.frame()
+    )
+  }
+
+  if (platform == "WinNat" && file.access(".", 2) != 0) {
+    warning("working directory not writable, using tempfile for GISRC")
+    gisrc <- paste(tempfile(tmpdir = tempdir), "junk", sep = "_")
+  }
+
+  writeLines(
+    c(
+      paste("GISDBASE:", gisDbase),
+      paste("LOCATION_NAME:", location),
+      paste("MAPSET:", mapset),
+      "GRASS_GUI: text"
+    ),
+    con = gisrc
+  )
+
+  if (platform == "WinNat" && use_g.dirseps.exe) {
+    gisrc <- system(
+      paste("g.dirseps.exe -g", shQuote(gisrc)),
+      intern = TRUE
+    )
+  }
+
+  Sys.setenv(GISRC = gisrc)
+  invisible(gisrc)
+}
+
 #' Initialize GRASS region files
 #'
 #' Creates `DEFAULT_WIND` and mapset `WIND` files, initializes the saved input

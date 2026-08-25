@@ -241,6 +241,7 @@ initGRASS <- function(
 
   # set GRASS startup environment variables
   platform <- get("SYS", envir = .GRASS_CACHE)
+  missing_override <- missing(override)
 
   if (platform == "WinNat") {
     OSGEO4W_ROOT <- setup_runtime_env_windows(
@@ -249,36 +250,7 @@ initGRASS <- function(
       gv = gv
     )
 
-    # set GISRC environment variable to the location of the .grassrc file
-    Sys.setenv(GISRC = paste0(Sys.getenv("HOME"), "\\.grassrc", gv$major))
-
-    if (file.exists(Sys.getenv("GISRC")) && !override) {
-      ask_override(
-        paste("A GISRC file", Sys.getenv("GISRC"), "already exists"),
-        missing_override = missing(override),
-        envir = environment()
-      )
-    }
-
-    # check if the working directory is writable otherwise use a tempfile
-    if (file.access(".", 2) != 0) {
-      warning("working directory not writable, using tempfile for GISRC")
-      Sys.setenv(GISRC = paste(tempfile(tmpdir = Sys.getenv("RGRASS_TEMPDIR")), "junk", sep = "_"))
-    }
-
-    # write the GISRC file
-    cat("GISDBASE:", getwd(), "\n", file = Sys.getenv("GISRC"))
-    cat("LOCATION_NAME: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
-    cat("MAPSET: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
-
-    gisrc <- ifelse(
-      use_g.dirseps.exe,
-      system(paste("g.dirseps.exe -g", shQuote(Sys.getenv("GISRC"))), intern = TRUE),
-      Sys.getenv("GISRC")
-    )
-
     assign("addEXE", .addexe(), envir = .GRASS_CACHE)
-    Sys.setenv(GISRC = gisrc)
 
     gisDbase <- ifelse(
       use_g.dirseps.exe,
@@ -294,25 +266,22 @@ initGRASS <- function(
       addon_base = addon_base,
       gv = gv
     )
-
-    # FIXME Sys.info()["sysname"] == "Darwin"
-    Sys.setenv(GISRC = paste0(home, "/.grassrc", gv$major))
-
-    # FIXME
-    if (file.exists(Sys.getenv("GISRC")) && !override) {
-      ask_override(
-        paste("A GISRC file", Sys.getenv("GISRC"), "already exists"),
-        missing_override = missing(override),
-        envir = environment()
-      )
-    }
-
-    cat("GISDBASE:", gisDbase, "\n", file = Sys.getenv("GISRC"))
-    cat("LOCATION_NAME: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
-    cat("MAPSET: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
   } else {
     stop(paste("Platform variant", platform, "not supported"))
   }
+
+  write_gisrc(
+    gisDbase = gisDbase,
+    location = location,
+    mapset = mapset,
+    home = home,
+    gv = gv,
+    platform = platform,
+    override = override,
+    missing_override = missing_override,
+    use_g.dirseps.exe = use_g.dirseps.exe,
+    tempdir = tempdir
+  )
 
   set.GIS_LOCK(pid)
   assign("INIT_USED", TRUE, envir = .GRASS_CACHE)
@@ -321,31 +290,6 @@ initGRASS <- function(
   if (remove_GISRC) {
     assign("remove_GISRC", remove_GISRC, envir = .GRASS_CACHE)
   }
-
-  system(paste(
-    paste0("g.gisenv", get("addEXE", envir = .GRASS_CACHE)),
-    shQuote(paste("set=GISDBASE=", gisDbase))
-  ))
-
-  system(paste(
-    paste0("g.gisenv", get("addEXE", envir = .GRASS_CACHE)),
-    shQuote(paste("set=GISDBASE", gisDbase, sep = "="))
-  ))
-
-  system(paste(
-    paste0("g.gisenv", get("addEXE", envir = .GRASS_CACHE)),
-    shQuote(paste("set=LOCATION_NAME", location, sep = "="))
-  ))
-
-  system(paste(
-    paste0("g.gisenv", get("addEXE", envir = .GRASS_CACHE)),
-    shQuote(paste("set=MAPSET", mapset, sep = "="))
-  ))
-
-  system(paste(
-    paste0("g.gisenv", get("addEXE", envir = .GRASS_CACHE)),
-    shQuote("set=GRASS_GUI=text")
-  ))
 
   Sys.setenv(GISBASE = gisBase)
   Sys.setenv(GISDBASE = gisDbase)

@@ -31,6 +31,53 @@ test_that("create_session_directories supplies temporary defaults", {
   expect_true(dir.exists(file.path(session$loc_path, session$mapset)))
 })
 
+test_that("write_gisrc records the complete Unix session", {
+  home <- tempfile("rgrass-home-")
+  dir.create(home)
+  withr::defer(unlink(home, recursive = TRUE))
+  withr::local_envvar(GISRC = NA)
+
+  gisrc <- write_gisrc(
+    gisDbase = "/data/grass",
+    location = "location1",
+    mapset = "user1",
+    home = home,
+    gv = list(major = "8"),
+    platform = "unix",
+    override = TRUE
+  )
+
+  expect_identical(gisrc, file.path(home, ".grassrc8"))
+  expect_identical(Sys.getenv("GISRC"), gisrc)
+
+  settings <- read.dcf(gisrc)
+  expect_identical(unname(settings[1, "GISDBASE"]), "/data/grass")
+  expect_identical(unname(settings[1, "LOCATION_NAME"]), "location1")
+  expect_identical(unname(settings[1, "MAPSET"]), "user1")
+  expect_identical(unname(settings[1, "GRASS_GUI"]), "text")
+})
+
+test_that("write_gisrc protects an existing file", {
+  home <- tempfile("rgrass-home-")
+  dir.create(home)
+  withr::defer(unlink(home, recursive = TRUE))
+  writeLines("existing configuration", file.path(home, ".grassrc8"))
+
+  expect_error(
+    write_gisrc(
+      gisDbase = "/data/grass",
+      location = "location1",
+      mapset = "user1",
+      home = home,
+      gv = list(major = "8"),
+      platform = "unix",
+      override = FALSE,
+      missing_override = FALSE
+    ),
+    "A GISRC file.*already exists"
+  )
+})
+
 test_that("write_wind creates default region files", {
   loc_path <- tempfile("grass-location-")
   mapset <- "user1"
