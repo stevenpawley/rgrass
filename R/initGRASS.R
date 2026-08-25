@@ -166,10 +166,10 @@ initGRASS <- function(
     gisBase = NULL,
     home = NULL,
     SG = NULL,
-    gisDbase,
+    gisDbase = NULL,
     addon_base = NULL,
-    location,
-    mapset,
+    location = NULL,
+    mapset = NULL,
     override = FALSE,
     use_g.dirseps.exe = TRUE,
     pid,
@@ -228,6 +228,17 @@ initGRASS <- function(
   # set the home directory environment variable
   home <- set_home_path(home)
 
+  session <- create_session_directories(
+    gisDbase = gisDbase,
+    location = location,
+    mapset = mapset,
+    tempdir = tempdir
+  )
+  gisDbase <- session$gisDbase
+  location <- session$location
+  mapset <- session$mapset
+  loc_path <- session$loc_path
+
   # set GRASS startup environment variables
   platform <- get("SYS", envir = .GRASS_CACHE)
 
@@ -269,17 +280,12 @@ initGRASS <- function(
     assign("addEXE", .addexe(), envir = .GRASS_CACHE)
     Sys.setenv(GISRC = gisrc)
 
-    if (!missing(gisDbase)) {
-      if (!file.exists(gisDbase)) dir.create(gisDbase)
-    } else {
-      gisDbase <- Sys.getenv("RGRASS_TEMPDIR")
-    }
-
     gisDbase <- ifelse(
       use_g.dirseps.exe,
       system(paste("g.dirseps.exe -g", shQuote(gisDbase)), intern = TRUE),
       gisDbase
     )
+    loc_path <- file.path(gisDbase, location)
   } else if (platform == "unix") {
     OSGEO4W_ROOT <- ""
 
@@ -301,12 +307,6 @@ initGRASS <- function(
       )
     }
 
-    if (!missing(gisDbase)) {
-      if (!file.exists(gisDbase)) dir.create(gisDbase)
-    } else {
-      gisDbase <- Sys.getenv("RGRASS_TEMPDIR")
-    }
-
     cat("GISDBASE:", gisDbase, "\n", file = Sys.getenv("GISRC"))
     cat("LOCATION_NAME: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
     cat("MAPSET: <UNKNOWN>", "\n", file = Sys.getenv("GISRC"), append = TRUE)
@@ -326,24 +326,6 @@ initGRASS <- function(
     paste0("g.gisenv", get("addEXE", envir = .GRASS_CACHE)),
     shQuote(paste("set=GISDBASE=", gisDbase))
   ))
-
-  if (missing(location)) {
-    location <- basename(tempfile())
-  }
-
-  loc_path <- paste(gisDbase, location, sep = "/")
-
-  if (!file.exists(loc_path)) dir.create(loc_path)
-
-  if (!file.exists(paste(loc_path, "PERMANENT", sep = "/"))) {
-    dir.create(paste(loc_path, "PERMANENT", sep = "/"))
-  }
-
-  if (missing(mapset)) mapset <- basename(tempfile())
-
-  if (!file.exists(paste(loc_path, mapset, sep = "/"))) {
-    dir.create(paste(loc_path, mapset, sep = "/"))
-  }
 
   system(paste(
     paste0("g.gisenv", get("addEXE", envir = .GRASS_CACHE)),

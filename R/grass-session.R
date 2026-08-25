@@ -1,3 +1,56 @@
+#' Create GRASS session directories
+#'
+#' Resolves optional database, location, and mapset paths and creates the
+#' directory structure required for a GRASS session.
+#'
+#' @param gisDbase Optional path to the GRASS database.
+#' @param location Optional GRASS location name.
+#' @param mapset Optional GRASS mapset name.
+#' @param tempdir Directory used for default session paths and names.
+#'
+#' @returns A list containing `gisDbase`, `location`, `mapset`, and `loc_path`.
+#' @keywords internal
+create_session_directories <- function(
+    gisDbase = NULL,
+    location = NULL,
+    mapset = NULL,
+    tempdir = base::tempdir()) {
+  if (is.null(gisDbase)) {
+    gisDbase <- tempdir
+  }
+  if (!dir.exists(gisDbase)) {
+    dir.create(gisDbase, recursive = TRUE)
+  }
+
+  if (is.null(location)) {
+    location <- basename(tempfile(tmpdir = tempdir))
+  }
+  loc_path <- file.path(gisDbase, location)
+  if (!dir.exists(loc_path)) {
+    dir.create(loc_path, recursive = TRUE)
+  }
+
+  permanent_path <- file.path(loc_path, "PERMANENT")
+  if (!dir.exists(permanent_path)) {
+    dir.create(permanent_path)
+  }
+
+  if (is.null(mapset)) {
+    mapset <- basename(tempfile(tmpdir = tempdir))
+  }
+  mapset_path <- file.path(loc_path, mapset)
+  if (!dir.exists(mapset_path)) {
+    dir.create(mapset_path)
+  }
+
+  list(
+    gisDbase = gisDbase,
+    location = location,
+    mapset = mapset,
+    loc_path = loc_path
+  )
+}
+
 #' Initialize GRASS region files
 #'
 #' Creates `DEFAULT_WIND` and mapset `WIND` files, initializes the saved input

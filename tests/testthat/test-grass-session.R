@@ -1,3 +1,36 @@
+test_that("create_session_directories creates a requested session layout", {
+  gisDbase <- tempfile("grass-database-")
+  withr::defer(unlink(gisDbase, recursive = TRUE))
+
+  session <- create_session_directories(
+    gisDbase = gisDbase,
+    location = "location1",
+    mapset = "user1",
+    tempdir = tempdir()
+  )
+
+  expect_identical(session$gisDbase, gisDbase)
+  expect_identical(session$location, "location1")
+  expect_identical(session$mapset, "user1")
+  expect_identical(session$loc_path, file.path(gisDbase, "location1"))
+  expect_true(dir.exists(file.path(session$loc_path, "PERMANENT")))
+  expect_true(dir.exists(file.path(session$loc_path, "user1")))
+})
+
+test_that("create_session_directories supplies temporary defaults", {
+  session_tempdir <- tempfile("rgrass-session-")
+  dir.create(session_tempdir)
+  withr::defer(unlink(session_tempdir, recursive = TRUE))
+
+  session <- create_session_directories(tempdir = session_tempdir)
+
+  expect_identical(session$gisDbase, session_tempdir)
+  expect_true(nzchar(session$location))
+  expect_true(nzchar(session$mapset))
+  expect_true(dir.exists(file.path(session$loc_path, "PERMANENT")))
+  expect_true(dir.exists(file.path(session$loc_path, session$mapset)))
+})
+
 test_that("write_wind creates default region files", {
   loc_path <- tempfile("grass-location-")
   mapset <- "user1"
