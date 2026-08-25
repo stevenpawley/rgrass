@@ -124,6 +124,57 @@ write_gisrc <- function(
   invisible(gisrc)
 }
 
+#' Set the Python executable used by GRASS
+#'
+#' Preserves an existing `GRASS_PYTHON` setting, selects the Python executable
+#' shipped with OSGeo4W when applicable, and otherwise chooses Python 2 or 3
+#' from the GRASS version.
+#'
+#' @param OSGEO4W_ROOT Path to an OSGeo4W installation, or an empty string.
+#' @param grass_version Optional GRASS version string. When `NULL`, the version
+#'   is obtained from `g.version -g`.
+#'
+#' @returns The value of `GRASS_PYTHON`, invisibly.
+#' @keywords internal
+set_grass_python <- function(
+    OSGEO4W_ROOT = Sys.getenv("OSGEO4W_ROOT"),
+    grass_version = NULL) {
+  grass_python <- Sys.getenv("GRASS_PYTHON")
+  if (nzchar(grass_python)) {
+    return(invisible(grass_python))
+  }
+
+  if (nzchar(OSGEO4W_ROOT)) {
+    python3 <- file.path(OSGEO4W_ROOT, "bin", "python3.exe")
+    grass_python <- if (file.exists(python3)) {
+      python3
+    } else {
+      file.path(OSGEO4W_ROOT, "bin", "python.exe")
+    }
+  } else {
+    if (is.null(grass_version)) {
+      version_output <- system(
+        paste0("g.version", get("addEXE", envir = .GRASS_CACHE), " -g"),
+        intern = TRUE
+      )
+      grass_version <- sub("^[^=]*=", "", version_output[1])
+    }
+
+    python <- if (utils::compareVersion(grass_version, "7.6.1") > 0) {
+      "python3"
+    } else {
+      "python"
+    }
+    grass_python <- paste0(
+      python,
+      get("addEXE", envir = .GRASS_CACHE)
+    )
+  }
+
+  Sys.setenv(GRASS_PYTHON = grass_python)
+  invisible(grass_python)
+}
+
 #' Initialize GRASS region files
 #'
 #' Creates `DEFAULT_WIND` and mapset `WIND` files, initializes the saved input

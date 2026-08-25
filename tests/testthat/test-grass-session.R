@@ -78,6 +78,57 @@ test_that("write_gisrc protects an existing file", {
   )
 })
 
+test_that("Python setup preserves an existing executable", {
+  withr::local_envvar(GRASS_PYTHON = "/custom/python")
+
+  result <- set_grass_python(
+    OSGEO4W_ROOT = "/unused",
+    grass_version = "8.4.0"
+  )
+
+  expect_identical(result, "/custom/python")
+  expect_identical(Sys.getenv("GRASS_PYTHON"), "/custom/python")
+})
+
+test_that("Python setup selects the OSGeo4W executable", {
+  osgeo_root <- tempfile("osgeo4w-")
+  dir.create(file.path(osgeo_root, "bin"), recursive = TRUE)
+  withr::defer(unlink(osgeo_root, recursive = TRUE))
+  withr::local_envvar(GRASS_PYTHON = NA)
+
+  python3 <- file.path(osgeo_root, "bin", "python3.exe")
+  file.create(python3)
+  expect_identical(
+    set_grass_python(OSGEO4W_ROOT = osgeo_root),
+    python3
+  )
+
+  Sys.unsetenv("GRASS_PYTHON")
+  unlink(python3)
+  expect_identical(
+    set_grass_python(OSGEO4W_ROOT = osgeo_root),
+    file.path(osgeo_root, "bin", "python.exe")
+  )
+})
+
+test_that("Python setup selects an executable from the GRASS version", {
+  old_addexe <- get("addEXE", envir = .GRASS_CACHE)
+  withr::defer(assign("addEXE", old_addexe, envir = .GRASS_CACHE))
+  assign("addEXE", "", envir = .GRASS_CACHE)
+  withr::local_envvar(GRASS_PYTHON = NA)
+
+  expect_identical(
+    set_grass_python(OSGEO4W_ROOT = "", grass_version = "8.4.0"),
+    "python3"
+  )
+
+  Sys.unsetenv("GRASS_PYTHON")
+  expect_identical(
+    set_grass_python(OSGEO4W_ROOT = "", grass_version = "7.6.1"),
+    "python"
+  )
+})
+
 test_that("write_wind creates default region files", {
   loc_path <- tempfile("grass-location-")
   mapset <- "user1"

@@ -307,37 +307,7 @@ initGRASS <- function(
     stop(attr(comp, "message"))
   }
 
-  grass_python <- Sys.getenv("GRASS_PYTHON")
-
-  if (grass_python == "") {
-    if (nchar(OSGEO4W_ROOT) > 0) {
-      if (file.exists(paste(OSGEO4W_ROOT, "bin/python3.exe", sep = "/"))) {
-        Sys.setenv(
-          GRASS_PYTHON = paste(OSGEO4W_ROOT, "bin/python3.exe", sep = "/")
-        )
-      } else {
-        Sys.setenv(
-          GRASS_PYTHON = paste(OSGEO4W_ROOT, "bin/python.exe", sep = "/")
-        )
-      }
-    } else {
-      gvers <- system(
-        paste0("g.version", get("addEXE", envir = .GRASS_CACHE), " -g "),
-        intern = TRUE
-      )
-      gvers <- strsplit(gvers[1], "=")[[1]][2]
-
-      if (gvers > "7.6.1") {
-        Sys.setenv(
-          GRASS_PYTHON = paste0("python3", get("addEXE", envir = .GRASS_CACHE))
-        )
-      } else {
-        Sys.setenv(
-          GRASS_PYTHON = paste0("python", get("addEXE", envir = .GRASS_CACHE))
-        )
-      }
-    }
-  }
+  set_grass_python(OSGEO4W_ROOT = OSGEO4W_ROOT)
 
   assign("GV", gv, envir = .GRASS_CACHE)
   write_wind(
