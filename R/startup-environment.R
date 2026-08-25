@@ -43,7 +43,7 @@ set_path_variable <- function(variable_name, install_path) {
 
     do.call(
       Sys.setenv,
-      setNames(list(updated_paths), variable_name)
+      stats::setNames(list(updated_paths), variable_name)
     )
   }
 
