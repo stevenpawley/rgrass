@@ -60,12 +60,13 @@ create_session_directories <- function(
 #' @param location Name of the GRASS location.
 #' @param mapset Name of the GRASS mapset.
 #' @param home Directory in which to create the GISRC file.
-#' @param gv GRASS version information returned by [grass_version()].
+#' @param gv GRASS version information returned by `grass_version()`.
 #' @param platform GRASS platform variant (`"unix"` or `"WinNat"`).
 #' @param override Whether an existing GISRC file may be overwritten.
 #' @param missing_override Whether `override` was omitted from [initGRASS()].
-#' @param use_g.dirseps.exe Whether to convert Windows path separators with
-#'   `g.dirseps.exe`.
+#' @param use_g.dirseps.exe Whether to normalize Windows path separators. The
+#'   argument name is retained for compatibility; normalization is performed by
+#'   R and does not invoke `g.dirseps.exe`.
 #' @param tempdir Directory used for a fallback GISRC file when the current
 #'   working directory is not writable on Windows.
 #'
@@ -83,11 +84,15 @@ write_gisrc <- function(
     use_g.dirseps.exe = TRUE,
     tempdir = base::tempdir()) {
   gisrc <- if (platform == "WinNat") {
-    paste0(home, "\\.grassrc", gv$major)
+    file.path(home, paste0(".grassrc", gv$major))
   } else if (platform == "unix") {
     file.path(home, paste0(".grassrc", gv$major))
   } else {
     stop(paste("Platform variant", platform, "not supported"))
+  }
+
+  if (platform == "WinNat" && use_g.dirseps.exe) {
+    gisrc <- normalizePath(gisrc, winslash = "/", mustWork = FALSE)
   }
 
   if (file.exists(gisrc) && !override) {
@@ -112,13 +117,6 @@ write_gisrc <- function(
     ),
     con = gisrc
   )
-
-  if (platform == "WinNat" && use_g.dirseps.exe) {
-    gisrc <- system(
-      paste("g.dirseps.exe -g", shQuote(gisrc)),
-      intern = TRUE
-    )
-  }
 
   Sys.setenv(GISRC = gisrc)
   invisible(gisrc)

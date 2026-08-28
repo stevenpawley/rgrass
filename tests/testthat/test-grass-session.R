@@ -57,6 +57,41 @@ test_that("write_gisrc records the complete Unix session", {
   expect_identical(unname(settings[1, "GRASS_GUI"]), "text")
 })
 
+test_that("write_gisrc initializes a Windows session without GRASS commands", {
+  home <- tempfile("rgrass-windows-home-")
+  gisDbase <- tempfile("rgrass-windows-database-")
+  dir.create(home)
+  dir.create(gisDbase)
+  withr::defer(unlink(c(home, gisDbase), recursive = TRUE))
+  withr::local_envvar(GISRC = NA)
+
+  gisrc <- write_gisrc(
+    gisDbase = normalizePath(gisDbase, winslash = "/"),
+    location = "location1",
+    mapset = "user1",
+    home = home,
+    gv = list(major = "8"),
+    platform = "WinNat",
+    override = TRUE,
+    use_g.dirseps.exe = TRUE
+  )
+
+  expect_identical(
+    gisrc,
+    normalizePath(
+      file.path(home, ".grassrc8"),
+      winslash = "/",
+      mustWork = FALSE
+    )
+  )
+  expect_true(file.exists(gisrc))
+  expect_identical(Sys.getenv("GISRC"), gisrc)
+  expect_identical(
+    unname(read.dcf(gisrc)[1, "GISDBASE"]),
+    normalizePath(gisDbase, winslash = "/")
+  )
+})
+
 test_that("write_gisrc protects an existing file", {
   home <- tempfile("rgrass-home-")
   dir.create(home)

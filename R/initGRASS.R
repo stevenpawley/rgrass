@@ -75,9 +75,10 @@
 #'   mapset directory for the working session.
 #' @param override default FALSE, set to TRUE if accidental trashing of GRASS
 #'   .gisrc files and locations is not a problem.
-#' @param use_g.dirseps.exe default TRUE; when TRUE appears to work for WinGRASS
-#'   Native binaries, when FALSE for QGIS GRASS binaries; ignored on other
-#'   platforms.
+#' @param use_g.dirseps.exe default TRUE; whether Windows paths should be
+#'   normalized. The argument name is retained for compatibility, but path
+#'   normalization is performed by R and no longer invokes `g.dirseps.exe`.
+#'   Ignored on other platforms.
 #' @param pid default `as.integer(round(runif(1, 1, 1000)))`, integer used
 #'   to identify GIS_LOCK; the value here is arbitrary, but probably should be
 #'   set correctly.
@@ -252,11 +253,13 @@ initGRASS <- function(
 
     assign("addEXE", .addexe(), envir = .GRASS_CACHE)
 
-    gisDbase <- ifelse(
-      use_g.dirseps.exe,
-      system(paste("g.dirseps.exe -g", shQuote(gisDbase)), intern = TRUE),
-      gisDbase
-    )
+    if (use_g.dirseps.exe) {
+      gisDbase <- normalizePath(
+        gisDbase,
+        winslash = "/",
+        mustWork = TRUE
+      )
+    }
     loc_path <- file.path(gisDbase, location)
   } else if (platform == "unix") {
     OSGEO4W_ROOT <- ""

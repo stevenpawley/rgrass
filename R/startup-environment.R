@@ -92,7 +92,7 @@ set_addons_path <- function(addon_base = NULL, gv) {
 #'
 #' @param gisBase Path to the GRASS installation.
 #' @param addon_base Optional path to the GRASS add-ons directory.
-#' @param gv Cumulative GRASS version strings returned by [grass_version()].
+#' @param gv Cumulative GRASS version strings returned by `grass_version()`.
 #'
 #' @returns `NULL`, invisibly.
 #' @keywords internal
@@ -116,7 +116,7 @@ setup_runtime_env_unix <- function(gisBase, addon_base = NULL, gv) {
 #'
 #' @param gisBase Path to the GRASS installation.
 #' @param addon_base Optional path to the GRASS add-ons directory.
-#' @param gv Cumulative GRASS version strings returned by [grass_version()].
+#' @param gv Cumulative GRASS version strings returned by `grass_version()`.
 #'
 #' @returns The value of `OSGEO4W_ROOT`, invisibly.
 #' @keywords internal
