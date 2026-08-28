@@ -251,6 +251,8 @@ initGRASS <- function(
       gv = gv
     )
 
+    # calculate the platform-specific executable suffix
+    # windows = ".exe", linux = ""
     assign("addEXE", .addexe(), envir = .GRASS_CACHE)
 
     if (use_g.dirseps.exe) {
