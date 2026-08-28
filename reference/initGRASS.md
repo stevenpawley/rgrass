@@ -189,7 +189,7 @@ if (run) {
 if (run) {
   loc_existing <- try(gmeta(), silent = TRUE)
 }
-#> Warning: cannot open file '/file21b25fede195': No such file or directory
+#> Warning: cannot open file '/file205317373a4d': No such file or directory
 
 if (run) {
   # Initialize a temporary GRASS project using the example data
@@ -210,10 +210,10 @@ if (run) {
 #>    0%   3%   6%  10%  13%  16%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> SpatRaster read into GRASS using r.in.gdal from file
 #>  +----------------------------------------------------------------------------+
-#>  | Map:      elev                           Date: Fri Aug 28 03:48:23 2026    |
-#>  | Mapset:   file21b2227e2300               Login of Creator: runner          |
-#>  | Location: file21b27b50179b                                                 |
-#>  | DataBase: /tmp/grass7-runner-8621/Rtmp7KD5dw                               |
+#>  | Map:      elev                           Date: Fri Aug 28 04:11:31 2026    |
+#>  | Mapset:   file20538675247                Login of Creator: runner          |
+#>  | Location: file205310d42aac                                                 |
+#>  | DataBase: /tmp/grass7-runner-8270/Rtmprsu33Q                               |
 #>  | Title:                                                                     |
 #>  | Timestamp: none                                                            |
 #>  |----------------------------------------------------------------------------|
@@ -263,21 +263,21 @@ if (run) {
 #> Exporting raster data to RRASTER format...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> r.out.gdal complete. File
-#> </tmp/grass7-runner-8621/Rtmp7KD5dw/file21b29c5a20b.grd> created.
+#> </tmp/grass7-runner-8270/Rtmprsu33Q/file205372ac3780.grd> created.
 #> Checking GDAL data type and nodata value...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> Using GDAL data type <Float32>
 #> Exporting raster data to RRASTER format...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> r.out.gdal complete. File
-#> </tmp/grass7-runner-8621/Rtmp7KD5dw/file21b217f79ab8.grd> created.
+#> </tmp/grass7-runner-8270/Rtmprsu33Q/file205345f0af90.grd> created.
 #> Checking GDAL data type and nodata value...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> Using GDAL data type <Float32>
 #> Exporting raster data to RRASTER format...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> r.out.gdal complete. File
-#> </tmp/grass7-runner-8621/Rtmp7KD5dw/file21b262b8d606.grd> created.
+#> </tmp/grass7-runner-8270/Rtmprsu33Q/file20536110f2e0.grd> created.
 
 
 # Restore the original GRASS session
