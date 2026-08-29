@@ -165,9 +165,24 @@ setup_runtime_env_windows <- function(gisBase, addon_base = NULL, gv) {
   set_path_variable("PYTHONPATH", file.path(gisBase, "etc", "python"))
 
   if (nzchar(OSGEO4W_ROOT)) {
-    Sys.setenv(
-      PYTHONHOME = file.path(OSGEO4W_ROOT, "apps", "Python37")
-    )
+    # The OSGeo4W shell normally provides PYTHONHOME. Preserve that value so
+    # it stays aligned with the Python version used by the installation. When
+    # it is absent, use the newest bundled Python rather than assuming 3.7.
+    if (!nzchar(Sys.getenv("PYTHONHOME"))) {
+      python_homes <- list.dirs(
+        file.path(OSGEO4W_ROOT, "apps"),
+        recursive = FALSE,
+        full.names = TRUE
+      )
+      python_homes <- python_homes[
+        grepl("^Python[0-9]+$", basename(python_homes))
+      ]
+
+      if (length(python_homes) > 0L) {
+        python_versions <- as.integer(sub("^Python", "", basename(python_homes)))
+        Sys.setenv(PYTHONHOME = python_homes[which.max(python_versions)])
+      }
+    }
   } else {
     python_dirs <- list.files(gisBase, pattern = "Python")
 

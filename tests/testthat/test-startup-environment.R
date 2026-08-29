@@ -213,6 +213,8 @@ test_that("setup_runtime_env_windows configures an OSGeo4W environment", {
   osgeo_root <- tempfile("osgeo4w-")
   dir.create(file.path(addon_base, "bin"), recursive = TRUE)
   dir.create(file.path(addon_base, "scripts"))
+  dir.create(file.path(osgeo_root, "apps", "Python39"), recursive = TRUE)
+  dir.create(file.path(osgeo_root, "apps", "Python312"), recursive = TRUE)
   withr::defer(unlink(addon_base, recursive = TRUE))
   withr::local_envvar(
     GISBASE = NA,
@@ -261,8 +263,31 @@ test_that("setup_runtime_env_windows configures an OSGeo4W environment", {
   )
   expect_identical(
     Sys.getenv("PYTHONHOME"),
-    file.path(osgeo_root, "apps", "Python37")
+    file.path(osgeo_root, "apps", "Python312")
   )
+})
+
+test_that("setup_runtime_env_windows preserves OSGeo4W PYTHONHOME", {
+  gisBase <- tempfile("grass-installation-")
+  osgeo_root <- tempfile("osgeo4w-")
+  python_home <- file.path(osgeo_root, "apps", "Python313")
+  dir.create(python_home, recursive = TRUE)
+  withr::defer(unlink(osgeo_root, recursive = TRUE))
+  withr::local_envvar(
+    OSGEO4W_ROOT = osgeo_root,
+    PYTHONHOME = python_home,
+    PATH = "/usr/bin",
+    PYTHONPATH = NA,
+    GRASS_PROJSHARE = NA
+  )
+
+  setup_runtime_env_windows(
+    gisBase = gisBase,
+    addon_base = tempfile("missing-grass-addons-"),
+    gv = list(major = "8", major_minor = "8.4")
+  )
+
+  expect_identical(Sys.getenv("PYTHONHOME"), python_home)
 })
 
 test_that("setup_runtime_env_windows detects bundled Python", {
