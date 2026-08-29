@@ -219,7 +219,7 @@ if (run) {
   # Read and print GRASS interface description for 'r.slope.aspect'
   print(parseGRASS("r.slope.aspect"))
 }
-#> Warning: cannot open file '/file1f721beef263': No such file or directory
+#> Warning: cannot open file '/file1fa31f5f3410': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 if (run) {
   # Assemble the 'r.slope.aspect' command with specified parameters as a string
@@ -231,7 +231,7 @@ if (run) {
     aspect = "aspect"
   )
 }
-#> Warning: cannot open file '/file1f72b4e1c0e': No such file or directory
+#> Warning: cannot open file '/file1fa3322db94e': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 if (run) {
   # Alternatively, specify parameters as a list
@@ -242,13 +242,13 @@ if (run) {
           flags = c("overwrite"),
           parameters = params)
 }
-#> Warning: cannot open file '/file1f72311da2af': No such file or directory
+#> Warning: cannot open file '/file1fa3770bbdaa': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 if (run) {
   # Read and print GRASS interface description for 'r.buffer'
   print(parseGRASS("r.buffer"))
 }
-#> Warning: cannot open file '/file1f726bcf57ad': No such file or directory
+#> Warning: cannot open file '/file1fa352bc1f56': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 if (run) {
   # Assemble the 'r.buffer' with specified parameters as as string
@@ -260,7 +260,7 @@ if (run) {
     distances = seq(1000, 15000, 1000)
   )
 }
-#> Warning: cannot open file '/file1f72159b52c8': No such file or directory
+#> Warning: cannot open file '/file1fa327435c7c': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 if (run) {
   # Alternatively, specify parameters as a list
@@ -271,7 +271,7 @@ if (run) {
   )
   doGRASS("r.buffer", flags = c("overwrite"), parameters = params)
 }
-#> Warning: cannot open file '/file1f7220501289': No such file or directory
+#> Warning: cannot open file '/file1fa3bafecfb': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 if (run) {
   # Restore original echo command option
@@ -282,7 +282,7 @@ if (run) {
   try(res <- execGRASS("r.stats", input = "fire_blocksgg", flags = c("C", "n")),
       silent = FALSE)
 }
-#> Warning: cannot open file '/file1f727d8af62c': No such file or directory
+#> Warning: cannot open file '/file1fa33941b9c1': No such file or directory
 #> Error in file(con, "r") : cannot open the connection
 if (run) {
   # Execute 'r.stats' with legacyExec and print the result
@@ -322,7 +322,7 @@ if (run) {
     "r.random.cells --overwrite --quiet output=samples distance=1000 ncells=100 seed=1"
   )
 }
-#> Warning: cannot open file '/file1f72dfea586.err': No such file or directory
+#> Warning: cannot open file '/file1fa341df118c.err': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 if (run) {
   # Alternatively, run the same command using 'execGRASS'
@@ -335,6 +335,6 @@ if (run) {
     seed = 1L
   )
 }
-#> Warning: cannot open file '/file1f721f2e8525': No such file or directory
+#> Warning: cannot open file '/file1fa36c919192': No such file or directory
 #> Error in file(con, "r"): cannot open the connection
 ```
