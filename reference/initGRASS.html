@@ -127,12 +127,12 @@ file given in the "GISRC" environment variable if created by
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">initGRASS</span><span class="op">(</span></span>
 <span>  gisBase <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">home</span>,</span>
-<span>  <span class="va">SG</span>,</span>
-<span>  <span class="va">gisDbase</span>,</span>
-<span>  <span class="va">addon_base</span>,</span>
-<span>  <span class="va">location</span>,</span>
-<span>  <span class="va">mapset</span>,</span>
+<span>  home <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  SG <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gisDbase <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  addon_base <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  location <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mapset <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  override <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  use_g.dirseps.exe <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">pid</span>,</span>
@@ -280,7 +280,6 @@ declare –interface-description output as UTF-8 without ensuring that it is.</p
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="va">run</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">loc_existing</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="gmeta.html">gmeta</a></span><span class="op">(</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/file1fa36ce460fc': No such file or directory</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="va">run</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="co"># Initialize a temporary GRASS project using the example data</span></span></span>
@@ -301,10 +300,10 @@ declare –interface-description output as UTF-8 without ensuring that it is.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span>    0%   3%   6%  10%  13%  16%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> SpatRaster read into GRASS using r.in.gdal from file</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  +----------------------------------------------------------------------------+</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  | Map:      elev                           Date: Sat Aug 29 19:42:00 2026    |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  | Mapset:   file1fa326261abe               Login of Creator: runner          |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  | Location: file1fa34e225a66                                                 |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  | DataBase: /tmp/grass7-runner-8094/Rtmpp92M08                               |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  | Map:      elev                           Date: Sun Aug 30 15:55:06 2026    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  | Mapset:   file20087fbe7648               Login of Creator: runner          |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  | Location: file200863391262                                                 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  | DataBase: /tmp/grass7-runner-8195/RtmpqlicxZ                               |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  | Title:                                                                     |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  | Timestamp: none                                                            |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  |----------------------------------------------------------------------------|</span>
@@ -354,21 +353,21 @@ declare –interface-description output as UTF-8 without ensuring that it is.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exporting raster data to RRASTER format...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> r.out.gdal complete. File</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/tmp/grass7-runner-8094/Rtmpp92M08/file1fa328256cd1.grd&gt; created.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/tmp/grass7-runner-8195/RtmpqlicxZ/file200869d4f691.grd&gt; created.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Checking GDAL data type and nodata value...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Using GDAL data type &lt;Float32&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exporting raster data to RRASTER format...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> r.out.gdal complete. File</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/tmp/grass7-runner-8094/Rtmpp92M08/file1fa3253c6523.grd&gt; created.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/tmp/grass7-runner-8195/RtmpqlicxZ/file200863f96eb.grd&gt; created.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Checking GDAL data type and nodata value...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Using GDAL data type &lt;Float32&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exporting raster data to RRASTER format...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> r.out.gdal complete. File</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/tmp/grass7-runner-8094/Rtmpp92M08/file1fa3171c372e.grd&gt; created.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/tmp/grass7-runner-8195/RtmpqlicxZ/file2008699bf33a.grd&gt; created.</span>
 <span class="r-plt img"><img src="initGRASS-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Restore the original GRASS session</span></span></span>

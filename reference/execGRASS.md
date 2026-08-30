@@ -219,8 +219,60 @@ if (run) {
   # Read and print GRASS interface description for 'r.slope.aspect'
   print(parseGRASS("r.slope.aspect"))
 }
-#> Warning: cannot open file '/file1fa31f5f3410': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> Command: r.slope.aspect 
+#> Description: Generates raster maps of slope, aspect, curvatures and partial derivatives from an elevation raster map. Aspect is calculated counterclockwise from east. 
+#> Keywords: raster, terrain, aspect, slope, curvature 
+#> Parameters:
+#>   name: elevation, type: string, required: yes, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name of input elevation raster map]
+#>   name: slope, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output slope raster map]
+#>   name: aspect, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output aspect raster map]
+#>   name: format, type: string, required: no, multiple: no
+#>   default: degrees
+#> [Format for reporting the slope]
+#>   name: precision, type: string, required: no, multiple: no
+#>   default: FCELL
+#> [Storage type for resultant raster map]
+#>   name: pcurvature, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output profile curvature raster map]
+#>   name: tcurvature, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output tangential curvature raster map]
+#>   name: dx, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output first order partial derivative dx (E-W slope) raster map]
+#>   name: dy, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output first order partial derivative dy (N-S slope) raster map]
+#>   name: dxx, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output second order partial derivative dxx raster map]
+#>   name: dyy, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output second order partial derivative dyy raster map]
+#>   name: dxy, type: string, required: no, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output second order partial derivative dxy raster map]
+#>   name: zscale, type: float, required: no, multiple: no
+#>   default: 1.0
+#> [Multiplicative factor to convert elevation units to horizontal units]
+#>   name: min_slope, type: float, required: no, multiple: no
+#>   default: 0.0
+#> [Minimum slope value (in percent) for which aspect is computed]
+#> Flags:
+#>   name: a [Do not align the current region to the raster elevation map] {FALSE}
+#>   name: e [Compute output at edges and near NULL values] {FALSE}
+#>   name: n [Default: degrees counter-clockwise from East, with flat = 0] {FALSE}
+#>   name: overwrite [Allow output files to overwrite existing files] {FALSE}
+#>   name: help [Print usage summary] {FALSE}
+#>   name: verbose [Verbose module output] {FALSE}
+#>   name: quiet [Quiet module output] {FALSE}
 if (run) {
   # Assemble the 'r.slope.aspect' command with specified parameters as a string
   doGRASS(
@@ -231,8 +283,10 @@ if (run) {
     aspect = "aspect"
   )
 }
-#> Warning: cannot open file '/file1fa3322db94e': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> GRASS command: r.slope.aspect --overwrite elevation=elevation.dem slope=slope aspect=aspect 
+#> [1] "r.slope.aspect --overwrite elevation=elevation.dem slope=slope aspect=aspect"
+#> attr(,"cmd")
+#> [1] "r.slope.aspect"
 if (run) {
   # Alternatively, specify parameters as a list
   params <- list(elevation = "elevation",
@@ -242,14 +296,35 @@ if (run) {
           flags = c("overwrite"),
           parameters = params)
 }
-#> Warning: cannot open file '/file1fa3770bbdaa': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> GRASS command: r.slope.aspect --overwrite elevation=elevation slope=slope aspect=aspect 
+#> [1] "r.slope.aspect --overwrite elevation=elevation slope=slope aspect=aspect"
+#> attr(,"cmd")
+#> [1] "r.slope.aspect"
 if (run) {
   # Read and print GRASS interface description for 'r.buffer'
   print(parseGRASS("r.buffer"))
 }
-#> Warning: cannot open file '/file1fa352bc1f56': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> Command: r.buffer 
+#> Description: Creates a raster map showing buffer zones surrounding cells that contain non-NULL category values. 
+#> Keywords: raster, buffer 
+#> Parameters:
+#>   name: input, type: string, required: yes, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name of input raster map]
+#>   name: output, type: string, required: yes, multiple: no
+#>   keydesc: name, keydesc_count: 1
+#> [Name for output raster map]
+#>   name: distances, type: float, required: yes, multiple: yes
+#> [Distance zone(s)]
+#>   name: units, type: string, required: no, multiple: no
+#>   default: meters
+#> [Units of distance]
+#> Flags:
+#>   name: z [Ignore zero (0) data cells instead of NULL cells] {FALSE}
+#>   name: overwrite [Allow output files to overwrite existing files] {FALSE}
+#>   name: help [Print usage summary] {FALSE}
+#>   name: verbose [Verbose module output] {FALSE}
+#>   name: quiet [Quiet module output] {FALSE}
 if (run) {
   # Assemble the 'r.buffer' with specified parameters as as string
   doGRASS(
@@ -260,8 +335,10 @@ if (run) {
     distances = seq(1000, 15000, 1000)
   )
 }
-#> Warning: cannot open file '/file1fa327435c7c': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> GRASS command: r.buffer --overwrite input=schools output=bmap distances=1000,2000,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000 
+#> [1] "r.buffer --overwrite input=schools output=bmap distances=1000,2000,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000"
+#> attr(,"cmd")
+#> [1] "r.buffer"
 if (run) {
   # Alternatively, specify parameters as a list
   params <- list(
@@ -271,8 +348,10 @@ if (run) {
   )
   doGRASS("r.buffer", flags = c("overwrite"), parameters = params)
 }
-#> Warning: cannot open file '/file1fa3bafecfb': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> GRASS command: r.buffer --overwrite input=schools output=bmap distances=1000,2000,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000 
+#> [1] "r.buffer --overwrite input=schools output=bmap distances=1000,2000,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000"
+#> attr(,"cmd")
+#> [1] "r.buffer"
 if (run) {
   # Restore original echo command option
   set.echoCmdOption(echoCmdOption)
@@ -282,8 +361,11 @@ if (run) {
   try(res <- execGRASS("r.stats", input = "fire_blocksgg", flags = c("C", "n")),
       silent = FALSE)
 }
-#> Warning: cannot open file '/file1fa33941b9c1': No such file or directory
-#> Error in file(con, "r") : cannot open the connection
+#> Error in execGRASS("r.stats", input = "fire_blocksgg", flags = c("C",  : 
+#>   The command:
+#> r.stats -C -n input=fire_blocksgg
+#> produced an error (1) during execution:
+#> ERROR: Raster map <fire_blocksgg> not found
 if (run) {
   # Execute 'r.stats' with legacyExec and print the result
   res <- execGRASS(
@@ -322,8 +404,10 @@ if (run) {
     "r.random.cells --overwrite --quiet output=samples distance=1000 ncells=100 seed=1"
   )
 }
-#> Warning: cannot open file '/file1fa341df118c.err': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#>  [1] "217 CZfg 35.83%" "262 CZlg 9.81%"  "270 CZig 34.04%" "405 CZbg 12.53%"
+#>  [5] "583 CZve 1.07%"  "720 CZam 0.24%"  "766 CZg 0.35%"   "862 CZam 3.05%" 
+#>  [9] "910 CZbg 2.22%"  "921 Km 0.62%"    "945 CZbg 0.00%"  "946 CZam 0.20%" 
+#> [13] "948 CZam 0.04%" 
 if (run) {
   # Alternatively, run the same command using 'execGRASS'
   execGRASS(
@@ -335,6 +419,4 @@ if (run) {
     seed = 1L
   )
 }
-#> Warning: cannot open file '/file1fa36c919192': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
 ```

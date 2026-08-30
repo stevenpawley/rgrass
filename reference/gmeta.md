@@ -101,23 +101,115 @@ if (run) {
   G <- gmeta()
   print(G)
 }
-#> Warning: cannot open file '/file1fa3297f65b': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> gisdbase    /tmp/grassdb 
+#> location    nc_basic_spm_grass7 
+#> mapset      PERMANENT 
+#> rows        1350 
+#> columns     1500 
+#> north       228500 
+#> south       215000 
+#> west        630000 
+#> east        645000 
+#> nsres       10 
+#> ewres       10 
+#> projection:
+#>  PROJCRS["NAD83(HARN) / North Carolina",
+#>     BASEGEOGCRS["NAD83(HARN)",
+#>         DATUM["NAD83 (High Accuracy Reference Network)",
+#>             ELLIPSOID["GRS 1980",6378137,298.257222101,
+#>                 LENGTHUNIT["metre",1]]],
+#>         PRIMEM["Greenwich",0,
+#>             ANGLEUNIT["degree",0.0174532925199433]],
+#>         ID["EPSG",4152]],
+#>     CONVERSION["SPCS83 North Carolina zone (meters)",
+#>         METHOD["Lambert Conic Conformal (2SP)",
+#>             ID["EPSG",9802]],
+#>         PARAMETER["Latitude of false origin",33.75,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8821]],
+#>         PARAMETER["Longitude of false origin",-79,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8822]],
+#>         PARAMETER["Latitude of 1st standard parallel",36.1666666666667,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8823]],
+#>         PARAMETER["Latitude of 2nd standard parallel",34.3333333333333,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8824]],
+#>         PARAMETER["Easting at false origin",609601.22,
+#>             LENGTHUNIT["metre",1],
+#>             ID["EPSG",8826]],
+#>         PARAMETER["Northing at false origin",0,
+#>             LENGTHUNIT["metre",1],
+#>             ID["EPSG",8827]]],
+#>     CS[Cartesian,2],
+#>         AXIS["easting (X)",east,
+#>             ORDER[1],
+#>             LENGTHUNIT["metre",1]],
+#>         AXIS["northing (Y)",north,
+#>             ORDER[2],
+#>             LENGTHUNIT["metre",1]],
+#>     USAGE[
+#>         SCOPE["Engineering survey, topographic mapping."],
+#>         AREA["United States (USA) - North Carolina - counties of Alamance; Alexander; Alleghany; Anson; Ashe; Avery; Beaufort; Bertie; Bladen; Brunswick; Buncombe; Burke; Cabarrus; Caldwell; Camden; Carteret; Caswell; Catawba; Chatham; Cherokee; Chowan; Clay; Cleveland; Columbus; Craven; Cumberland; Currituck; Dare; Davidson; Davie; Duplin; Durham; Edgecombe; Forsyth; Franklin; Gaston; Gates; Graham; Granville; Greene; Guilford; Halifax; Harnett; Haywood; Henderson; Hertford; Hoke; Hyde; Iredell; Jackson; Johnston; Jones; Lee; Lenoir; Lincoln; Macon; Madison; Martin; McDowell; Mecklenburg; Mitchell; Montgomery; Moore; Nash; New Hanover; Northampton; Onslow; Orange; Pamlico; Pasquotank; Pender; Perquimans; Person; Pitt; Polk; Randolph; Richmond; Robeson; Rockingham; Rowan; Rutherford; Sampson; Scotland; Stanly; Stokes; Surry; Swain; Transylvania; Tyrrell; Union; Vance; Wake; Warren; Washington; Watauga; Wayne; Wilkes; Wilson; Yadkin; Yancey."],
+#>         BBOX[33.83,-84.33,36.59,-75.38]],
+#>     ID["EPSG",3358]] 
 
 if (run) {
   cat(getLocationProj(), "\n")
   cat(getLocationProj(g.proj_WKT = FALSE), "\n")
 }
-#> Warning: cannot open file '/file1fa32082b1e': No such file or directory
-#> Warning: cannot open file '/file1fa32a670f15': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#> PROJCRS["NAD83(HARN) / North Carolina",
+#>     BASEGEOGCRS["NAD83(HARN)",
+#>         DATUM["NAD83 (High Accuracy Reference Network)",
+#>             ELLIPSOID["GRS 1980",6378137,298.257222101,
+#>                 LENGTHUNIT["metre",1]]],
+#>         PRIMEM["Greenwich",0,
+#>             ANGLEUNIT["degree",0.0174532925199433]],
+#>         ID["EPSG",4152]],
+#>     CONVERSION["SPCS83 North Carolina zone (meters)",
+#>         METHOD["Lambert Conic Conformal (2SP)",
+#>             ID["EPSG",9802]],
+#>         PARAMETER["Latitude of false origin",33.75,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8821]],
+#>         PARAMETER["Longitude of false origin",-79,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8822]],
+#>         PARAMETER["Latitude of 1st standard parallel",36.1666666666667,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8823]],
+#>         PARAMETER["Latitude of 2nd standard parallel",34.3333333333333,
+#>             ANGLEUNIT["degree",0.0174532925199433],
+#>             ID["EPSG",8824]],
+#>         PARAMETER["Easting at false origin",609601.22,
+#>             LENGTHUNIT["metre",1],
+#>             ID["EPSG",8826]],
+#>         PARAMETER["Northing at false origin",0,
+#>             LENGTHUNIT["metre",1],
+#>             ID["EPSG",8827]]],
+#>     CS[Cartesian,2],
+#>         AXIS["easting (X)",east,
+#>             ORDER[1],
+#>             LENGTHUNIT["metre",1]],
+#>         AXIS["northing (Y)",north,
+#>             ORDER[2],
+#>             LENGTHUNIT["metre",1]],
+#>     USAGE[
+#>         SCOPE["Engineering survey, topographic mapping."],
+#>         AREA["United States (USA) - North Carolina - counties of Alamance; Alexander; Alleghany; Anson; Ashe; Avery; Beaufort; Bertie; Bladen; Brunswick; Buncombe; Burke; Cabarrus; Caldwell; Camden; Carteret; Caswell; Catawba; Chatham; Cherokee; Chowan; Clay; Cleveland; Columbus; Craven; Cumberland; Currituck; Dare; Davidson; Davie; Duplin; Durham; Edgecombe; Forsyth; Franklin; Gaston; Gates; Graham; Granville; Greene; Guilford; Halifax; Harnett; Haywood; Henderson; Hertford; Hoke; Hyde; Iredell; Jackson; Johnston; Jones; Lee; Lenoir; Lincoln; Macon; Madison; Martin; McDowell; Mecklenburg; Mitchell; Montgomery; Moore; Nash; New Hanover; Northampton; Onslow; Orange; Pamlico; Pasquotank; Pender; Perquimans; Person; Pitt; Polk; Randolph; Richmond; Robeson; Rockingham; Rowan; Rutherford; Sampson; Scotland; Stanly; Stokes; Surry; Swain; Transylvania; Tyrrell; Union; Vance; Wake; Warren; Washington; Watauga; Wayne; Wilkes; Wilson; Yadkin; Yancey."],
+#>         BBOX[33.83,-84.33,36.59,-75.38]],
+#>     ID["EPSG",3358]] 
+#> +proj=lcc +lat_0=33.75 +lon_0=-79 +lat_1=36.1666666666667 +lat_2=34.3333333333333 +x_0=609601.22 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs 
 
 if (run) {
   grd <- gmeta2grd()
   print(grd)
 }
-#> Warning: cannot open file '/file1fa315918839': No such file or directory
-#> Error in file(con, "r"): cannot open the connection
+#>                       X1     X2
+#> cellcentre.offset 630005 215005
+#> cellsize              10     10
+#> cells.dim           1500   1350
 
 if (run) {
   ncells <- prod(slot(grd, "cells.dim"))
@@ -125,5 +217,6 @@ if (run) {
   mask_SG <- sp::SpatialGridDataFrame(grd, data = df)
   print(summary(mask_SG))
 }
-#> Error: object 'grd' not found
+#>               Length                Class                 Mode 
+#>              2025000 SpatialGridDataFrame                   S4 
 ```

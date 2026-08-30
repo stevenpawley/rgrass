@@ -48,6 +48,9 @@ Useful links:
 
 Authors:
 
+- Steven Pawley <dr.stevenpawley@gmail.com>
+  ([ORCID](https://orcid.org/0000-0002-5524-3320))
+
 - Roger Bivand <Roger.Bivand@nhh.no>
   ([ORCID](https://orcid.org/0000-0003-2392-6140))
 
