@@ -11,12 +11,12 @@
 \usage{
 initGRASS(
   gisBase = NULL,
-  home,
-  SG,
-  gisDbase,
-  addon_base,
-  location,
-  mapset,
+  home = NULL,
+  SG = NULL,
+  gisDbase = NULL,
+  addon_base = NULL,
+  location = NULL,
+  mapset = NULL,
   override = FALSE,
   use_g.dirseps.exe = TRUE,
   pid,
