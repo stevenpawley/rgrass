@@ -35,7 +35,7 @@ jobs:
       run: |
         apt-get update
         apt-get install -y --no-install-recommends \
-          libtiff5 \
+          libtiff-dev \
           libudunits2-dev \
           libharfbuzz-dev \
           libfribidi-dev \
