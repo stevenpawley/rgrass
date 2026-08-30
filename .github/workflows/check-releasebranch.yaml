@@ -42,8 +42,7 @@ jobs:
           libmysqlclient-dev \
           libfontconfig1-dev \
           qpdf \
-          pandoc \
-          pandoc-citeproc
+          pandoc
 
     - name: Install R
       run: |
