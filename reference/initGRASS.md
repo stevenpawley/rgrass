@@ -209,10 +209,10 @@ if (run) {
 #>    0%   3%   6%  10%  13%  16%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> SpatRaster read into GRASS using r.in.gdal from file
 #>  +----------------------------------------------------------------------------+
-#>  | Map:      elev                           Date: Sun Aug 30 17:26:48 2026    |
-#>  | Mapset:   file201e29ce2b93               Login of Creator: runner          |
-#>  | Location: file201e2da5d91                                                  |
-#>  | DataBase: /tmp/grass7-runner-8217/RtmpGfxr48                               |
+#>  | Map:      elev                           Date: Sun Aug 30 18:01:17 2026    |
+#>  | Mapset:   file1f5d71a2b93e               Login of Creator: runner          |
+#>  | Location: file1f5d525adc2d                                                 |
+#>  | DataBase: /tmp/grass7-runner-8024/RtmpJrroYv                               |
 #>  | Title:                                                                     |
 #>  | Timestamp: none                                                            |
 #>  |----------------------------------------------------------------------------|
@@ -262,21 +262,21 @@ if (run) {
 #> Exporting raster data to RRASTER format...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> r.out.gdal complete. File
-#> </tmp/grass7-runner-8217/RtmpGfxr48/file201e174d90f1.grd> created.
+#> </tmp/grass7-runner-8024/RtmpJrroYv/file1f5d3195420f.grd> created.
 #> Checking GDAL data type and nodata value...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> Using GDAL data type <Float32>
 #> Exporting raster data to RRASTER format...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> r.out.gdal complete. File
-#> </tmp/grass7-runner-8217/RtmpGfxr48/file201e4f8f6aa0.grd> created.
+#> </tmp/grass7-runner-8024/RtmpJrroYv/file1f5d8a4a136.grd> created.
 #> Checking GDAL data type and nodata value...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> Using GDAL data type <Float32>
 #> Exporting raster data to RRASTER format...
 #>    2%   5%   8%  11%  14%  17%  20%  23%  26%  30%  33%  36%  40%  43%  46%  50%  53%  56%  60%  63%  66%  70%  73%  76%  80%  83%  86%  90%  93%  96% 100%
 #> r.out.gdal complete. File
-#> </tmp/grass7-runner-8217/RtmpGfxr48/file201e2ba560bf.grd> created.
+#> </tmp/grass7-runner-8024/RtmpJrroYv/file1f5d4f794872.grd> created.
 
 
 # Restore the original GRASS session

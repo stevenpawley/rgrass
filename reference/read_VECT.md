@@ -290,7 +290,7 @@ if (run) {
 #>  | Map scale:       1:1                                                       |
 #>  | Name of creator: runner                                                    |
 #>  | Organization:                                                              |
-#>  | Source date:     Sun Aug 30 17:26:58 2026                                  |
+#>  | Source date:     Sun Aug 30 18:01:27 2026                                  |
 #>  | Timestamp (first layer): none                                              |
 #>  |----------------------------------------------------------------------------|
 #>  | Map format:      native                                                    |

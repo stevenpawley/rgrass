@@ -199,7 +199,7 @@ if (require("terra", quietly = TRUE)) {
 #> resolution  : 500, 500  (x, y)
 #> extent      : 120000, 935000, 10000, 320000  (xmin, xmax, ymin, ymax)
 #> coord. ref. : +proj=lcc +lat_0=33.75 +lon_0=-79 +lat_1=36.1666666666667 +lat_2=34.3333333333333 +x_0=609601.22 +y_0=0 +ellps=GRS80 +units=m +no_defs
-#> source      : file201e3cb511d2.grd
+#> source      : file1f5d2253ad98.grd
 #> categories  : label
 #> name        : label
 #> min value   :     0
@@ -302,7 +302,7 @@ if (require("sp", quietly = TRUE)) {
 
 #> SpatialGridDataFrame read into GRASS using r.in.bin
 #>  +----------------------------------------------------------------------------+
-#>  | Map:      sqdemSP                        Date: Sun Aug 30 17:26:53 2026    |
+#>  | Map:      sqdemSP                        Date: Sun Aug 30 18:01:22 2026    |
 #>  | Mapset:   RGRASS_EXAMPLES                Login of Creator: runner          |
 #>  | Location: nc_basic_spm_grass7                                              |
 #>  | DataBase: /tmp/grassdb                                                     |
@@ -332,9 +332,9 @@ if (require("sp", quietly = TRUE)) {
 #>  +----------------------------------------------------------------------------+
 #> 
 #>    user  system elapsed 
-#>   0.850   0.415   0.826 
+#>   0.764   0.345   0.805 
 #>    user  system elapsed 
-#>   0.815   0.671   0.666 
+#>   0.658   0.595   0.567 
 #> [1] "sqdemSP"   "elevation"
 #> [1] "sqdemSP_RGRASS_EXAMPLES" "elevation_PERMANENT"    
 #> 1 48
