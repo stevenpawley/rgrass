@@ -13,17 +13,22 @@ jobs:
   R-CMD-check-releasebranch:
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
+      matrix:
         container: [
           "osgeo/grass-gis:releasebranch_8_4-ubuntu",
           "osgeo/grass-gis:main-ubuntu"
         ]
-    
+
     container:
       image: ${{ matrix.container }}
       options: --privileged
 
     steps:
+    - name: Install CA certificates
+      run: |
+        apt-get update
+        apt-get install -y ca-certificates
+
     - uses: actions/checkout@v4
 
     - name: Install system deps
@@ -58,7 +63,7 @@ jobs:
         R -e "install.packages(c('remotes', 'rcmdcheck'))"
         R -e "remotes::install_deps(dependencies = TRUE)"
         R -e "install.packages('terra', repos = 'https://cloud.r-project.org/', type = 'source')"
-    
+
     - uses: r-lib/actions/check-r-package@v2
       with:
         upload-snapshots: true
